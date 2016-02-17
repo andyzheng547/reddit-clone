@@ -1,4 +1,8 @@
+require_relative 'concerns/slugifiable'
+
 class User < ActiveRecord::Base
+  include Slugifiable::InstanceMethods
+  extend Slugifiable::ClassMethods
 
   has_many :posts
   has_many :subscriptions
