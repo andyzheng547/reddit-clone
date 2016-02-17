@@ -1,10 +1,79 @@
 <html>
 <head>
-  <title>Reddit clone</title>
+  <title>Reddit clone - The failed experiment they never deployed</title>
+
+  <!-- Stylesheets -->
+  <link href="<%= url('/css/bootstrap.min.css') %>" rel="stylesheet" type="text/css" />
+  <link href="<%= url('/css/style.css') %>" rel="stylesheet" type="text/css" />
+
+  <!-- Javascript - jQuery and Bootstrap -->
+  <script src="<%= url('/js/jquery-1.12.0.min.js') %>"></script>
+  <script src="<%= url('/js/bootstrap.min.js') %>"></script>
+  <script src="<%= url('/js/angular.min.js') %>"></script>
+
 </head>
 <body>
 
-  <div class="container"><%= yield %></div>
+  <div class="container">
 
-</body>
+    <!-- Angular shows and hides signup/login form when signup/login button clicked -->
+    <!-- ng-app initializes the app. ng-init sets a variable of show_form as false -->
+    <div ng-app ng-init="show_form = false">
+
+      <!-- If user is logged in, should logout and profile link, otherwise show signup/login button -->
+      <div id="user-options">
+        <% if Helpers.is_logged_in?(session) %>
+          <button><a href="/profile">Profile</a></button>
+          <button><a href="/logout">Logout</a></button>
+
+        <% else %>
+
+          <!-- Signup / Login button - toggles the show and hide for form -->
+          <!-- Clicking causes variable show_form to switch from true/false -->
+         <button ng-click="show_form = !show_form" >Sign up / Login</button>
+        <% end %>
+      </div>
+
+      <br><br>
+
+      <!-- Signup / Login Form -->
+      <!-- Shows and hides when user clicks the Signup/Login button above -->
+      <div id="user-authenticate-forms" ng-show="show_form">
+
+        <!-- Button with x for closing form -->
+        <button ng-click="show_form = !show_form">X</button>
+
+
+        <div class="row">
+
+          <!-- Signup Form -->
+          <form class="col-xs-6" id="signup_form" method="post" action="/signup" >
+            <h3>Create a new account</h3><br>
+
+            <input type="text" name="name" placeholder="choose a username"><br>
+            <input type="text" name="password" placeholder="password"><br>
+            <input type="submit" value="Sign Up" ng-submit="show_form = !show_form">
+          </form>
+
+          <!-- Login Form -->
+          <form class="col-xs-6" id="login_form" method="post" action="/login">
+            <h3>Log In</h3><br>
+
+            <input type="text" name="name" placeholder="choose a username"><br>
+            <input type="text" name="password" placeholder="password"><br>
+            <input type="submit" value="Log In" ng-submit="show_form = !show_form">
+          </form>
+
+        </div> <!-- .row  -->
+      </div> <!-- #user-authentication-forms  -->
+    </div> <!-- end of angular ng-app  -->
+
+    <br><br>
+
+    <!-- Template -->
+    <%= yield %>
+
+  </div> <!-- .container  -->
+
+</body> 
 </html>

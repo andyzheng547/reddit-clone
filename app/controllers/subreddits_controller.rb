@@ -1,0 +1,3 @@
+class SubredditsController < ApplicationController
+
+end
