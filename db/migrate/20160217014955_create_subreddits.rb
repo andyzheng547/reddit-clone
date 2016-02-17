@@ -3,7 +3,7 @@ class CreateSubreddits < ActiveRecord::Migration
     create_table :subreddits do |t|
       t.string :name
       t.text :description
-      t.boolean :public
+      t.boolean :private
     end
   end
 end

@@ -11,16 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160217002358) do
+ActiveRecord::Schema.define(version: 20160217015124) do
 
   create_table "comment_replies", force: :cascade do |t|
-    t.string  "content"
+    t.text    "content"
     t.integer "user_id"
     t.integer "comment_id"
   end
 
   create_table "comments", force: :cascade do |t|
-    t.string  "content"
+    t.text    "content"
     t.integer "user_id"
     t.integer "post_id"
   end
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20160217002358) do
   create_table "posts", force: :cascade do |t|
     t.string  "title"
     t.string  "link"
-    t.string  "content"
+    t.text    "content"
     t.integer "post_type_id"
     t.integer "user_id"
     t.integer "subreddit_id"
@@ -46,10 +46,11 @@ ActiveRecord::Schema.define(version: 20160217002358) do
   create_table "subreddits", force: :cascade do |t|
     t.string  "name"
     t.text    "description"
-    t.boolean "public"
+    t.boolean "private"
   end
 
   create_table "subscription_requests", force: :cascade do |t|
+    t.integer "user_id"
     t.integer "subscription_id"
   end
 
