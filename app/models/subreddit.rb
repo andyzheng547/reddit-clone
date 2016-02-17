@@ -4,6 +4,9 @@ class Subreddit < ActiveRecord::Base
   include Slugifiable::InstanceMethods
   extend Slugifiable::ClassMethods
 
+  validates_presence_of :name
+  validates_uniqueness_of :name
+
   has_many :posts
   has_many :subscriptions
   has_many :users, through: :subscriptions

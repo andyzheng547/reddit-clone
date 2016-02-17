@@ -16,6 +16,11 @@
 
   <div class="container">
 
+    <!-- Messages when the user signups, logins, and logouts (successful or unsuccessful) -->
+    <% unless locals.empty? %>
+      <%= message %>
+    <% end %>
+
     <!-- Angular shows and hides signup/login form when signup/login button clicked -->
     <!-- ng-app initializes the app. ng-init sets a variable of show_form as false -->
     <div ng-app ng-init="show_form = false">
@@ -23,8 +28,11 @@
       <!-- If user is logged in, should logout and profile link, otherwise show signup/login button -->
       <div id="user-options">
         <% if Helpers.is_logged_in?(session) %>
+          <h4><%= Helpers.current_user(session).name %></h4>
           <button><a href="/profile">Profile</a></button>
-          <button><a href="/logout">Logout</a></button>
+          <form method="post" action="/logout">
+            <button><input type="submit" value="Log Out"></button>
+          </form>
 
         <% else %>
 
@@ -40,9 +48,8 @@
       <!-- Shows and hides when user clicks the Signup/Login button above -->
       <div id="user-authenticate-forms" ng-show="show_form">
 
-        <!-- Button with x for closing form -->
-        <button ng-click="show_form = !show_form">X</button>
-
+        <!-- Button with x for hiding form -->
+        <button id="form-close" ng-click="show_form = !show_form">X</button><br>
 
         <div class="row">
 
@@ -51,7 +58,7 @@
             <h3>Create a new account</h3><br>
 
             <input type="text" name="name" placeholder="choose a username"><br>
-            <input type="text" name="password" placeholder="password"><br>
+            <input type="password" name="password" placeholder="password"><br>
             <input type="submit" value="Sign Up" ng-submit="show_form = !show_form">
           </form>
 
@@ -60,7 +67,7 @@
             <h3>Log In</h3><br>
 
             <input type="text" name="name" placeholder="choose a username"><br>
-            <input type="text" name="password" placeholder="password"><br>
+            <input type="password" name="password" placeholder="password"><br>
             <input type="submit" value="Log In" ng-submit="show_form = !show_form">
           </form>
 
