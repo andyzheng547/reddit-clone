@@ -6,4 +6,8 @@ class Helpers
   def self.is_logged_in?(session)
     !!session[:user_id]
   end
+
+  def slug(name)
+    name.downcase.gsub(" ", "-")
+  end
 end

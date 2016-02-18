@@ -1,0 +1,18 @@
+<% unless locals.empty? %>
+  <%= message %>
+<% end %>
+
+<h1>Create a new subreddit</h1>
+
+<form method="post" action="/r/subreddits/new">
+  Name: <input type="text" name="name" placeholder="subreddit name"><br>
+
+  Description: <textarea name="description" placeholder="description"></textarea><br>
+
+  Set to Private: <br>
+  <input type="radio" name="is_private" value="true"> Yes <br>
+  <input type="radio" name="is_private" value="false" checked> No <br>
+
+  <input type="submit" value="Create New Subreddit">
+
+</form>

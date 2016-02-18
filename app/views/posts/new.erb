@@ -1,0 +1,26 @@
+<% unless locals.empty? %>
+  <%= message %>
+<% end %>
+
+<h1>New post</h1>
+
+<form method="post" action="/r/subreddits/new_post">
+  <h2>Submit a new link / Submit a new text post</h2><br>
+  <input type="radio" name="post_type_id" value="true" checked><p>Text</p>
+  <input type="radio" name="post_type_id" value="false"><p>Link</p><br>
+
+  Title: <input type="text" name="name" placeholder="title"><br>
+
+  Post to: <br>
+  <input type="radio" name="subreddit_name" value="<%= @subreddit.name %>" checked> 
+    <p><%= "/r/" + @subreddit.name %></p>
+  <input type="radio" name="subreddit_name" value="all">
+    <p>/r/all</p><br>
+
+
+  Link: <input type="text" name="link" placeholder="link">
+  Content: <textarea name="content" placeholder="content"></textarea><br>
+
+  <input type="submit" value="Submit New Post">
+
+</form>

@@ -1,3 +1,12 @@
 #user-options, #form-close {
   float: right;
 }
+
+body {
+  background-color: black;
+}
+
+.container {
+  background-color: white;
+  height: 100%;
+}

@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 20160217204119) do
   create_table "subreddits", force: :cascade do |t|
     t.string  "name"
     t.text    "description"
-    t.boolean "private"
+    t.boolean "is_private",  default: false
   end
 
   create_table "subscription_requests", force: :cascade do |t|

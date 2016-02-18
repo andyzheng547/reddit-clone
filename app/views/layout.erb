@@ -12,7 +12,7 @@
   <script src="<%= url('/js/angular.min.js') %>"></script>
 
 </head>
-<body>
+<body ng-app>
 
   <div class="container">
 
@@ -23,15 +23,17 @@
 
     <!-- Angular shows and hides signup/login form when signup/login button clicked -->
     <!-- ng-app initializes the app. ng-init sets a variable of show_form as false -->
-    <div ng-app ng-init="show_form = false">
+    <div ng-init="show_form = false">
 
       <!-- If user is logged in, should logout and profile link, otherwise show signup/login button -->
       <div id="user-options">
         <% if Helpers.is_logged_in?(session) %>
           <h4><%= Helpers.current_user(session).name %></h4>
-          <button><a href="/profile">Profile</a></button>
+          <button><a href="/user/<%= Helpers.current_user(session).name %>">Profile</a></button>
+          <button><a href="/r/subreddits/new">New Subreddit</a></button>
+          <button><a href="/posts/new/:subreddit_name/">New Post</a></button>
           <form method="post" action="/logout">
-            <button><input type="submit" value="Log Out"></button>
+            <input type="submit" value="Log Out">
           </form>
 
         <% else %>
