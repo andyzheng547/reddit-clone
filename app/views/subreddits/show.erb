@@ -1,0 +1,9 @@
+<h1><%= @subreddit.name %></h1><br>
+
+<% @subreddit.posts.each do |post| %>
+  <% if post.post_type_id == 1 %>
+    <h5><a href="<%= post.link %>"><%= post.title %></a></h5>
+  <% else %>
+    <h5><a href="/r/<%= @subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a></h5>
+  <% end %>
+<% end %>

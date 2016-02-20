@@ -4,23 +4,21 @@
 
 <h1>New post</h1>
 
-<form method="post" action="/r/subreddits/new_post">
+<form method="post" action="/posts/new">
   <h2>Submit a new link / Submit a new text post</h2><br>
-  <input type="radio" name="post_type_id" value="true" checked><p>Text</p>
-  <input type="radio" name="post_type_id" value="false"><p>Link</p><br>
+  <input type="radio" name="post_type_id" value="1"><p>Link</p><br>
+  <input type="radio" name="post_type_id" value="2" checked><p>Text</p>
 
-  Title: <input type="text" name="name" placeholder="title"><br>
+  <h3>Title: </h3><input type="text" name="title" placeholder="title"><br>
+  <h3>Link: </h3><input type="url" name="link" placeholder="link">
+  <h3>Content: </h3><textarea name="content" placeholder="content"></textarea><br>
 
-  Post to: <br>
-  <input type="radio" name="subreddit_name" value="<%= @subreddit.name %>" checked> 
-    <p><%= "/r/" + @subreddit.name %></p>
-  <input type="radio" name="subreddit_name" value="all">
-    <p>/r/all</p><br>
+  <h3>Post to: </h3><br>
+  <% Helpers.current_user(session).subreddits.each do |subreddit| %>
+    <input type="radio" name="subreddit_id" value="<%= subreddit.id %>"><%= subreddit.name %>
+  <% end %>
 
-
-  Link: <input type="text" name="link" placeholder="link">
-  Content: <textarea name="content" placeholder="content"></textarea><br>
-
+  <br>
   <input type="submit" value="Submit New Post">
 
 </form>

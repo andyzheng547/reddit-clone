@@ -8,6 +8,6 @@ class Helpers
   end
 
   def slug(name)
-    name.downcase.gsub(" ", "-")
+    name.downcase.gsub(/[\'\"]/, "").gsub(/[\W]/, "-")
   end
 end

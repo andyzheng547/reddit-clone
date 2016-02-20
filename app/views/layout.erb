@@ -29,9 +29,9 @@
       <div id="user-options">
         <% if Helpers.is_logged_in?(session) %>
           <h4><%= Helpers.current_user(session).name %></h4>
-          <button><a href="/user/<%= Helpers.current_user(session).name %>">Profile</a></button>
-          <button><a href="/r/subreddits/new">New Subreddit</a></button>
-          <button><a href="/posts/new/:subreddit_name/">New Post</a></button>
+          <button><a href="/u/<%= Helpers.current_user(session).name %>">Profile</a></button>
+          <button><a href="/r/subreddit/new">New Subreddit</a></button>
+          <button><a href="/posts/new">New Post</a></button>
           <form method="post" action="/logout">
             <input type="submit" value="Log Out">
           </form>

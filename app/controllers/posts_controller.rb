@@ -1,18 +1,45 @@
 
-# Post types: 1 = Link, 2 = Text
+# Post types: 1 = Link Post, 2 = Text Post
 
 class PostsController < ApplicationController
 
-  get '/posts/new/:subreddit_name/' do
-    @subreddit = Subreddit.find_by(name: params[:subreddit_name])
+  get '/posts/new' do
     erb :"posts/new"
   end
 
-  post '/posts/new/:subreddit_name/' do
-    "#{params}"
+  post '/posts/new' do
+    if params[:title].empty?
+      erb :"posts/new", locals: {message: "You left this post without a title."}
+    elsif params[:subreddit_id].empty?
+      erb :"posts/new", locals: {message: "You need to post to a subreddit."}
+    else
+      case params[:post_type_id]
+      when "1"
+        if params[:link].empty?
+          erb :"posts/new", locals: {message: "You need a link."}
+        else
+          @post = Post.create(
+            title: params[:title],
+            link: params[:link], 
+            post_type_id: params[:post_type_id], 
+            user_id: Helpers.current_user(session).id, 
+            subreddit_id: params[:subreddit_id])
+          redirect "/r/#{@post.subreddit.slug}/#{@post.slug}/comments"
+        end
+      when "2"
+          @post = Post.create(
+            title: params[:title],
+            content: params[:content], 
+            post_type_id: params[:post_type_id], 
+            user_id: Helpers.current_user(session).id, 
+            subreddit_id: params[:subreddit_id])
+          redirect "/r/#{@post.subreddit.slug}/#{@post.slug}/comments"
+      end
+    end
   end
 
-  get '/r/:subreddit_name/:post_title/comments' do
+  # Show a particular post in subreddit
+  get '/r/:subreddit_slug/:post_title/comments' do
     erb :"posts/show"
   end
 

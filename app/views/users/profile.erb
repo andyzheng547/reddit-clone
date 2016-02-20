@@ -1,0 +1,18 @@
+<h1>/u/<%= @user.name %> Profile</h1>
+
+<% if @user == Helpers.current_user(session) %>
+  <button><a href="/u/<%= @user.name %>/edit">Edit Profile</a></button>
+<% end %>
+
+<br><br>
+
+<h3>Subreddits</h3><br>
+<% @user.subreddits.each do |subreddit| %>
+  <a href="/r/<%= subreddit.slug %>"><%= subreddit.name %></a><br>
+<% end %>
+
+<h3>Posts</h3>
+<% @user.posts.each do |post| %>
+  <% subreddit = Subreddit.find(post.subreddit_id) %>
+  <a href="/r/<%= subreddit.slug %>/<%= post.title %>/comments"><%= post.title %></a><br>
+<% end %>
