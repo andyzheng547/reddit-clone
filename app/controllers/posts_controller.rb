@@ -39,7 +39,10 @@ class PostsController < ApplicationController
   end
 
   # Show a particular post in subreddit
-  get '/r/:subreddit_slug/:post_title/comments' do
+  get '/r/:subreddit_slug/:post_slug/comments' do
+    @user = Helpers.current_user(session)
+    @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
+    @post = Post.find_by_slug(params[:post_slug])
     erb :"posts/show"
   end
 

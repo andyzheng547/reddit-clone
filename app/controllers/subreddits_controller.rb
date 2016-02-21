@@ -2,6 +2,7 @@ class SubredditsController < ApplicationController
 
   get '/r/:subreddit_slug' do
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
+    @user = Helpers.current_user(session)
     erb :"subreddits/show"
   end
 
