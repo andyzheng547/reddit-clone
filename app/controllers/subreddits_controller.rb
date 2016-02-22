@@ -36,8 +36,10 @@ class SubredditsController < ApplicationController
   post '/r/:subreddit_slug/subscribe' do
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
     if @subreddit.is_private == true
-      @subscription = Subscription.create(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id, access: false)
-      @subscription_request = SubscriptionRequest.create(user_id: Helpers.current_user(session).id, subscription_id: @subscription.id)
+      @subscription = Subscription.find_or_create_by(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id, access: false)
+      @subscription_request = SubscriptionRequest.find_or_create_by(user_id: Helpers.current_user(session).id, subscription_id: @subscription.id)
+      @subscription_request.status = "pending"
+      @subscription_request.save
       redirect "/r/#{@subreddit.slug}"
     else
       @subscription = Subscription.create(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id, access: true)
@@ -45,22 +47,21 @@ class SubredditsController < ApplicationController
     end
   end
 
-  post '/r/:subreddit_slug/approve_request/:request_id' do
+  # Change subscription request status and subsciption access for the requester
+  post '/r/approve_request/:request_id' do
     @request = SubscriptionRequest.find(params[:request_id])
-    @request.status = "approved"
-    @request.save
+    @request.update(status: "approved")
 
     @subscription = Subscription.find(@request.subscription_id)
-    @subscription.access = true
-    @subscription.save
+    @subscription.update(access: true)
 
     redirect "/u/#{Helpers.current_user(session).name}"
   end
 
-  post '/r/:subreddit_slug/deny_request/:request_id' do
+  # Changes subscription request status
+  post '/r/deny_request/:request_id' do
     @request = SubscriptionRequest.find(params[:request_id])
-    @request.status = "denied"
-    @request.save
+    @request.update(status: "denied")
 
     redirect "/u/#{Helpers.current_user(session).name}"
   end

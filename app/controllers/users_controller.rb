@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
 
   get '/u/:username' do
-    @user = Helpers.current_user(session)
+    @user = User.find_by(name: params[:username])
     erb :"users/profile"
   end
 

@@ -34,11 +34,11 @@
         <% if subscription.access == false && request.status == "pending" %>
 
           <h6><%= requester.name %></h6><br>
-            <form method="post" action="/r/<%= subreddit.slug %>/approve_request/<%= request.id %>/">
+            <form method="post" action="/r/approve_request/<%= request.id %>">
               <input type="submit" value="Approve Request">
             </form>
 
-            <form method="post" action="/r/<%= subreddit.slug %>/deny_request/<%= request.id %>">
+            <form method="post" action="/r/deny_request/<%= request.id %>">
               <input type="submit" value="Deny Request">
             </form>
 
