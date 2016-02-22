@@ -1,12 +1,14 @@
 <% if @subreddit.is_private == false || 
   (@subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
 
-  <!-- If current user has a aubscription wth access equal to true, show posts -->
-  <% @subreddit.posts.each do |post| %>
-    <% if post.post_type_id == 1 %>
-      <h5><a href="<%= post.link %>"><%= post.title %></a></h5>
-    <% else %>
-      <h5><a href="/r/<%= @subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a></h5>
+  <% if @posts %>
+    <!-- If current user has a aubscription wth access equal to true, show posts -->
+    <% @posts.each do |post| %>
+      <% if post.post_type_id == 1 %>
+        <h5><a href="<%= post.link %>"><%= post.title %></a></h5>
+      <% else %>
+        <h5><a href="/r/<%= @subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a></h5>
+      <% end %>
     <% end %>
   <% end %>
 
@@ -15,7 +17,7 @@
 <% end %>
 
 <div class="subreddit-info">
-  <form method="post" action="subscribe">
+  <form method="post" action="/r/<%= @subreddit.slug %>/subscribe">
     <input type="submit" value="Subscribe">
   </form>
   <br>

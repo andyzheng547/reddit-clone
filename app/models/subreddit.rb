@@ -16,4 +16,8 @@ class Subreddit < ActiveRecord::Base
   # Moderators means moderator status
   has_many :moderators
 
+  def slug
+    name.downcase.gsub(/[\'\"]/, "").gsub(/[\W]/, "-")
+  end
+
 end

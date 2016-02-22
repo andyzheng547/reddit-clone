@@ -29,9 +29,9 @@
       <div id="user-options">
         <% if Helpers.is_logged_in?(session) %>
           <h4><%= Helpers.current_user(session).name %></h4>
-          <button><a href="/u/<%= Helpers.current_user(session).name %>">Profile</a></button>
-          <button><a href="/r/subreddit/new">New Subreddit</a></button>
-          <button><a href="/posts/new">New Post</a></button>
+          <a href="/u/<%= Helpers.current_user(session).name %>"><button>Profile</button></a>
+          <a href="/r/subreddit/new"><button>New Subreddit</button></a>
+          <a href="/posts/new"><button>New Post</button></a>
           <form method="post" action="/logout">
             <input type="submit" value="Log Out">
           </form>
@@ -68,7 +68,7 @@
           <form class="col-xs-6" id="login_form" method="post" action="/login">
             <h3>Log In</h3><br>
 
-            <input type="text" name="name" placeholder="choose a username"><br>
+            <input type="text" name="name" placeholder="enter username"><br>
             <input type="password" name="password" placeholder="password"><br>
             <input type="submit" value="Log In" ng-submit="show_form = !show_form">
           </form>

@@ -5,4 +5,20 @@ class UsersController < ApplicationController
     erb :"users/profile"
   end
 
+  get '/u/:username/edit' do
+
+  end
+
+  get '/u/:username/delete' do
+
+  end
+
+  post '/u/:username/edit' do
+
+  end
+
+  post '/u/:username/delete' do
+
+  end
+
 end

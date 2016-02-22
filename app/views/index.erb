@@ -1,0 +1,13 @@
+<% if @posts %>
+  <% @posts.each do |post| %>
+
+    <% if post.post_type_id == 1 %>
+      <a href="<%= post.link %>"><%= post.title %></a><br>
+      <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"></a><br>
+    <% else %>
+      <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a><br>
+      <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"></a><br>
+    <% end %>
+
+  <% end %>
+<% end %>

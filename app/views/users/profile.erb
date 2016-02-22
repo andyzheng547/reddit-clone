@@ -16,3 +16,37 @@
   <% subreddit = Subreddit.find(post.subreddit_id) %>
   <a href="/r/<%= subreddit.slug %>/<%= post.title %>/comments"><%= post.title %></a><br>
 <% end %>
+
+<h3>Moderator of: </h3><br>
+<ul>
+<% @user.moderators.each do |mod_status| %>
+
+  <% subreddit = Subreddit.find(mod_status.subreddit_id) %>
+  <h4><%= subreddit.name %></h4><br>
+
+  <% if subreddit.is_private == true %>
+    <ul>
+      <!-- If the subreddit is private and the subscriber does not have access, show 2 forms with submit buttons to approve or deny access for the person -->
+      <% subreddit.subscriptions.each do |subscription| %>
+        <% requester = User.find(subscription.user_id) %>
+        <% request = SubscriptionRequest.find_by(subscription_id: subscription.id, user_id: requester.id) %>
+
+        <% if subscription.access == false && request.status == "pending" %>
+
+          <h6><%= requester.name %></h6><br>
+            <form method="post" action="/r/<%= subreddit.slug %>/approve_request/<%= request.id %>/">
+              <input type="submit" value="Approve Request">
+            </form>
+
+            <form method="post" action="/r/<%= subreddit.slug %>/deny_request/<%= request.id %>">
+              <input type="submit" value="Deny Request">
+            </form>
+
+        <% end %>
+
+      <% end %> <!-- end of subreddit.subscriptions each loop -->
+    </ul>
+  <% end %>
+
+<% end %>
+</ul>

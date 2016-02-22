@@ -1,7 +1,7 @@
+<!-- Comments if subreddit is not private or if the user's subscription has access equal to true -->
 <% if @subreddit.is_private == false || 
   (@subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
 
-  <!-- If current user has a aubscription wth access equal to true, show posts -->
   <% if @post.post_type_id == 1 %>
     <h3><a href="<%= @post.link %>"><%= @post.title %></a></h3>
     <p>(<%= @post.link %>)</p>
@@ -29,12 +29,14 @@
 
     <% end %> <!-- End of comments -->
 
+<!-- User's subscription access is false and subreddit is private -->
 <% else %>
   <h1>Sorry, but you need to be subscribed to view this subreddit.</h1>
 <% end %>
 
+<!-- Subreddit info and subscription form -->
 <div class="subreddit-info">
-  <form method="post" action="subscribe">
+  <form method="post" action="/r/<%= @subreddit.slug %>/subscribe">
     <input type="submit" value="Subscribe">
   </form>
   <br>
