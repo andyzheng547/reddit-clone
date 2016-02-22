@@ -13,13 +13,6 @@
 
 ActiveRecord::Schema.define(version: 20160217015124) do
 
-  create_table "comment_replies", force: :cascade do |t|
-    t.text    "content"
-    t.integer "upvotes",    default: 1
-    t.integer "user_id"
-    t.integer "comment_id"
-  end
-
   create_table "comments", force: :cascade do |t|
     t.text    "content"
     t.integer "upvotes", default: 1
@@ -44,6 +37,13 @@ ActiveRecord::Schema.define(version: 20160217015124) do
     t.integer "post_type_id"
     t.integer "user_id"
     t.integer "subreddit_id"
+  end
+
+  create_table "replies", force: :cascade do |t|
+    t.text    "content"
+    t.integer "upvotes",    default: 1
+    t.integer "user_id"
+    t.integer "comment_id"
   end
 
   create_table "subreddits", force: :cascade do |t|

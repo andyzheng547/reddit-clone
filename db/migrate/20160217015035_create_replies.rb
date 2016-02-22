@@ -1,6 +1,6 @@
-class CreateCommentReplies < ActiveRecord::Migration
+class CreateReplies < ActiveRecord::Migration
   def change
-    create_table :comment_replies do |t|
+    create_table :replies do |t|
       t.text :content
       t.integer :upvotes, :default => 1
       t.integer :user_id

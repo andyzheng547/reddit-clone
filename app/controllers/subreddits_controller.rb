@@ -22,7 +22,7 @@ class SubredditsController < ApplicationController
   post '/r/subreddit/new' do
     if existing_subreddit = Subreddit.find_by(name: params[:name]) || params[:name] == "all"
       erb :"subreddits/new", locals: {message: "That subreddit already exists</a>."}
-    elsif !params[:name].empty?
+    elsif !params[:name].gsub(" ", "").empty?
       @subreddit = Subreddit.create(name: params[:name], description: params[:description], is_private: params[:is_private])
       subscription = Subscription.create(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id, access: true)
       moderator = Moderator.create(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id)
@@ -49,22 +49,24 @@ class SubredditsController < ApplicationController
 
   # Change subscription request status and subsciption access for the requester
   post '/r/approve_request/:request_id' do
-    @request = SubscriptionRequest.find(params[:request_id])
-    @request.update(status: "approved")
+    request = SubscriptionRequest.find(params[:request_id])
+    request.update(status: "approved")
 
-    @subscription = Subscription.find(@request.subscription_id)
-    @subscription.update(access: true)
+    subscription = Subscription.find(request.subscription_id)
+    subscription.update(access: true)
 
-    redirect "/u/#{Helpers.current_user(session).name}"
+    redirect to "/u/#{Helpers.current_user(session).name}"
   end
 
   # Changes subscription request status
   post '/r/deny_request/:request_id' do
-    @request = SubscriptionRequest.find(params[:request_id])
-    @request.update(status: "denied")
+    request = SubscriptionRequest.find(params[:request_id])
+    request.update(status: "denied")
 
-    redirect "/u/#{Helpers.current_user(session).name}"
+    redirect to "/u/#{Helpers.current_user(session).name}"
   end
+
+
 
 
 end

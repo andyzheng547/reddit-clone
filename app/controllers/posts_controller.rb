@@ -10,7 +10,7 @@ class PostsController < ApplicationController
   # When user fills out form for new post
   post '/posts/new' do
     # If the title is empty show the new post form again
-    if params[:title].empty?
+    if params[:title].gsub(" ", "").empty?
       erb :"posts/new", locals: {message: "You left this post without a title."}
 
     # If the user did not click a checkbox indicating the subreddit to post to
@@ -24,7 +24,7 @@ class PostsController < ApplicationController
       # Link Post
       when "1"
         # If they forgot a link
-        if params[:link].empty?
+        if params[:link].gsub(" ", "").empty?
           erb :"posts/new", locals: {message: "You need a link."}
         # else create link post
         else
@@ -56,6 +56,20 @@ class PostsController < ApplicationController
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
     @post = Post.find_by_slug(params[:post_slug])
     erb :"posts/show"
+  end
+
+  post '/r/:subreddit_slug/:post_slug/new_comment' do
+    if !params[:content].gsub(" ", "").empty?
+      @comment = Comment.create(content: params[:content], user_id: Helpers.current_user(session).id, post_id: params[:post_id])
+    end
+    redirect "/r/#{Subreddit.find_by_slug(params[:subreddit_slug]).slug}/#{Post.find_by_slug(params[:post_slug]).slug}/comments"
+  end
+
+  post '/r/:subreddit_slug/:post_slug/new_replie' do
+    if !params[:content].gsub(" ", "").empty?
+      @replie = CommentReplie.create(content: params[:content], user_id: Helpers.current_user(session).id, comment_id: params[:comment_id])
+    end
+    redirect "/r/#{Subreddit.find_by_slug(params[:subreddit_slug]).slug}/#{Post.find_by_slug(params[:post_slug]).slug}/comments"
   end
 
 end

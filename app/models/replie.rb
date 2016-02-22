@@ -1,4 +1,4 @@
-class CommentReplie < ActiveRecord::Base
+class Replie < ActiveRecord::Base
 
   validates_presence_of :content
 

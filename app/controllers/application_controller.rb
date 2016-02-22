@@ -29,7 +29,7 @@ class ApplicationController < Sinatra::Base
       erb :index, locals: {message: "That username is already taken."}
 
     # Create a new user if everything is valid and not empty. 
-    elsif User.valid_username?(params[:name]) && !params[:name].empty? && !params[:password].empty?
+    elsif User.valid_username?(params[:name]) && !params[:name].gsub(" ", "").empty? && !params[:password].gsub(" ", "").empty?
       @user = User.create(name: params[:name], password: params[:password])
       session[:user_id] = @user.id
       redirect "/u/#{@user.name}"

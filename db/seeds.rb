@@ -12,5 +12,4 @@ Subscription.create(user_id: 1, subreddit_id: 2, access: true)
 
 User.create(name: "david", password: "password")
 
-Post.create(post_type_id: 2, title: "First Post", content: "Testing", user_id: 1, subreddit_id: 1)
 Post.create(post_type_id: 1, title: "New York, New York by Frank Sinatra", link: "https://www.youtube.com/watch?v=EUrUfJW1JGk", user_id: 1, subreddit_id: 1)
