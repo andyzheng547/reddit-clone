@@ -67,6 +67,4 @@ class SubredditsController < ApplicationController
   end
 
 
-
-
 end

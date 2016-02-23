@@ -19,4 +19,8 @@ class Post < ActiveRecord::Base
     title.downcase.gsub(/[\'\"]/, "").gsub(/[\W]/, "-")
   end
 
+  def link_host
+    link.scan(/[^\/]+[\.]{1}[\w]+/)[0].gsub("www.", "")
+  end
+
 end

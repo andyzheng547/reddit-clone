@@ -8,13 +8,17 @@
 
 <h3>Subreddits</h3><br>
 <% @user.subreddits.each do |subreddit| %>
-  <a href="/r/<%= subreddit.slug %>"><%= subreddit.name %></a><br>
+  <a href="/r/<%= subreddit.slug %>">/r/<%= subreddit.name %></a><br>
 <% end %>
 
 <h3>Posts</h3>
-<% @user.posts.each do |post| %>
+<% @user.posts.order(id: :desc).each do |post| %>
   <% subreddit = Subreddit.find(post.subreddit_id) %>
-  <a href="/r/<%= subreddit.slug %>/<%= post.title %>/comments"><%= post.title %></a><br>
+  <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a>
+  <% if post.post_type_id == 1%>
+    (<%= post.link_host %>)
+  <% end %>
+  <br><br>
 <% end %>
 
 <h3>Moderator of: </h3><br>
@@ -22,7 +26,7 @@
 <% @user.moderators.each do |mod_status| %>
 
   <% subreddit = Subreddit.find(mod_status.subreddit_id) %>
-  <h4><%= subreddit.name %></h4><br>
+  <h4><a href="/r/<%= subreddit.slug %>">/r/<%= subreddit.name %></a></h4><br>
 
   <% if subreddit.is_private == true %>
     <ul>

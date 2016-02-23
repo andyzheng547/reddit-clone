@@ -6,7 +6,8 @@ class UsersController < ApplicationController
   end
 
   get '/u/:username/edit' do
-
+    @user = User.find_by(name: params[:username])
+    erb :"users/edit"
   end
 
   get '/u/:username/delete' do

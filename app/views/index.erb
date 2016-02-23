@@ -3,7 +3,7 @@
 
     <% if post.post_type_id == 1 %>
       <% subreddit = Subreddit.find(post.subreddit_id) %>
-      <a href="<%= post.link %>"><%= post.title %></a><br>
+      <a href="<%= post.link %>"><%= post.title %></a> (<%= post.link_host %>) <br>
       <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"></a><br>
       <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments"><button>Comments</button></a><br><br>
     <% else %>

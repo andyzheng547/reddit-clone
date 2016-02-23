@@ -9,6 +9,11 @@ class ApplicationController < Sinatra::Base
     set :session_secret, "secret"
   end
 
+  get '/test' do
+    comment = Comment.find(1)
+    "#{comment.methods}"
+  end
+
   # Index has posts from all subreddits
   get '/' do
     redirect "/pg/1"

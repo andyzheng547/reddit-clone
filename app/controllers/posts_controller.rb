@@ -55,6 +55,7 @@ class PostsController < ApplicationController
     @user = Helpers.current_user(session)
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
     @post = Post.find_by_slug(params[:post_slug])
+    @comments = Comment.where(post_id: @post.id)
     erb :"posts/show"
   end
 
@@ -65,9 +66,9 @@ class PostsController < ApplicationController
     redirect "/r/#{Subreddit.find_by_slug(params[:subreddit_slug]).slug}/#{Post.find_by_slug(params[:post_slug]).slug}/comments"
   end
 
-  post '/r/:subreddit_slug/:post_slug/new_replie' do
+  post '/r/:subreddit_slug/:post_slug/new_reply' do
     if !params[:content].gsub(" ", "").empty?
-      @replie = CommentReplie.create(content: params[:content], user_id: Helpers.current_user(session).id, comment_id: params[:comment_id])
+      @reply = Reply.create(content: params[:content], user_id: Helpers.current_user(session).id, comment_id: params[:comment_id])
     end
     redirect "/r/#{Subreddit.find_by_slug(params[:subreddit_slug]).slug}/#{Post.find_by_slug(params[:post_slug]).slug}/comments"
   end
