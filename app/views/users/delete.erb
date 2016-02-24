@@ -1,0 +1,15 @@
+<h1>/u/<%= @user.name %></h1>
+<hr>
+
+<form method="post" action="/u/<%= @user.name %>/delete">
+  <label for="confirmation">
+    <h3>Are you sure you want to delete your account?</h3>
+  </label>
+  <input type="radio" name="confirmation" value="yes"> Yes
+  <input type="radio" name="confirmation" value="no"> No
+  <br>
+
+  <input type="hidden" name="user_id" value="<%= @user.id %>">
+  <input type="submit" value="Confirm">
+
+</form>

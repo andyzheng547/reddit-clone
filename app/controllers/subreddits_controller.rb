@@ -16,7 +16,11 @@ class SubredditsController < ApplicationController
   end
 
   get '/r/subreddit/new' do
-    erb :"subreddits/new"
+    if Helpers.is_logged_in?(session)
+      erb :"subreddits/new"
+    else
+      erb :index, locals: {message: "You need to be logged in to create a new subreddit."}
+    end
   end
 
   post '/r/subreddit/new' do

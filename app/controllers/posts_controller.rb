@@ -4,7 +4,11 @@
 class PostsController < ApplicationController
 
   get '/posts/new' do
-    erb :"posts/new"
+    if Helpers.is_logged_in?(session)
+      erb :"posts/new"
+    else
+      erb :index, locals: {message: "You need to be logged in to create a new post."}
+    end
   end
 
   # When user fills out form for new post

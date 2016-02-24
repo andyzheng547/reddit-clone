@@ -11,13 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160223014817) do
+ActiveRecord::Schema.define(version: 20160217015109) do
 
   create_table "comments", force: :cascade do |t|
     t.text    "content"
-    t.integer "upvotes", default: 1
+    t.integer "upvotes",   default: 1
     t.integer "user_id"
     t.integer "post_id"
+    t.integer "parent_id"
   end
 
   create_table "moderators", force: :cascade do |t|
@@ -39,23 +40,10 @@ ActiveRecord::Schema.define(version: 20160223014817) do
     t.integer "subreddit_id"
   end
 
-  create_table "replies", force: :cascade do |t|
-    t.text    "content"
-    t.integer "upvotes",    default: 1
-    t.integer "user_id"
-    t.integer "comment_id"
-  end
-
   create_table "subreddits", force: :cascade do |t|
     t.string  "name"
     t.text    "description"
     t.boolean "is_private",  default: false
-  end
-
-  create_table "subscription_requests", force: :cascade do |t|
-    t.integer "user_id"
-    t.integer "subscription_id"
-    t.string  "status",          default: "pending"
   end
 
   create_table "subscriptions", force: :cascade do |t|

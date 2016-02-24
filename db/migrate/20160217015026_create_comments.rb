@@ -5,6 +5,7 @@ class CreateComments < ActiveRecord::Migration
       t.integer :upvotes, :default => 1
       t.integer :user_id
       t.integer :post_id
+      t.references :parent
     end
   end
 end

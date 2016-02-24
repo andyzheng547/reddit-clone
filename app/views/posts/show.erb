@@ -36,18 +36,20 @@
       <!-- Add replie to comment -->
       <% if Helpers.is_logged_in?(session) %>
         <button ng-init="show_replie_form = false"  ng-click="show_replie_form = !show_replie_form">Replie to comment</button>
-        <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_replie" ng-show="show_replie_form">
+        <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_replie_form">
           <textarea name="content" placeholder="replie"></textarea>
           <input type="hidden" name="comment_id" value="<%= comment.id %>">
           <input type="submit" value="Replie">
         </form>
       <% end %>
 
-      <% comment.replies.each do |replie| %>
-        <% replier = User.find(replie.user_id) %>
-        <h6><a href="/u/<%= replier.username %>"><%= replier.username %></a></h6>
-        <%= replie.content %>
-      <% end %>
+      <ul>
+        <% comment.replies.each do |replie| %>
+          <% replier = User.find(replie.user_id) %>
+          <h6><a href="/u/<%= replier.name %>"><%= replier.name %></a></h6>
+          <%= replie.content %>
+        <% end %>
+      </ul>
 
     <% end %> <!-- End of comments -->
 

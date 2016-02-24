@@ -1,1 +1,15 @@
-<form method="post"></form>
+<h1>Edit /u/<%= @user.name %></h1>
+
+<form method="post" action="/u/<%= @user.name %>/edit">
+  <input type="hidden" name="user_id" value="<%= @user.id %>">
+  <label for="name">Change Username: </label>
+  <input type="text" name="name" placeholder="change username"><br>
+
+  <p>Change Passowrd: </p><br>
+  <input type="password" name="old_password" placeholder="old password">
+  <input type="password" name="new_password" placeholder="new password">
+
+  <h3>Are you sure?</h3>
+  <input type="submit" value="Edit Profile">
+
+</form>
