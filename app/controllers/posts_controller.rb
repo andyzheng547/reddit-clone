@@ -72,7 +72,7 @@ class PostsController < ApplicationController
 
   post '/r/:subreddit_slug/:post_slug/new_reply' do
     if !params[:content].gsub(" ", "").empty?
-      @reply = Reply.create(content: params[:content], user_id: Helpers.current_user(session).id, comment_id: params[:comment_id])
+      @comment = Comment.create(content: params[:content], user_id: Helpers.current_user(session).id, parent_id: params[:parent_id])
     end
     redirect "/r/#{Subreddit.find_by_slug(params[:subreddit_slug]).slug}/#{Post.find_by_slug(params[:post_slug]).slug}/comments"
   end

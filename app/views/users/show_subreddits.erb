@@ -1,0 +1,11 @@
+<h3>Subreddits you are subscribed to</h3>
+<hr>
+
+<ul>
+<% @user.subreddits.each do |subreddit| %>
+
+  <a href="/r/<%= subreddit.name %>">/r/<%= subreddit.name %></a>
+  <br><br>
+
+<% end %>
+</ul>

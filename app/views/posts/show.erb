@@ -13,8 +13,6 @@
 
     <br><br>
 
-    <h4>Comments</h4>
-
     <!-- Add a new comment -->
     <% if Helpers.is_logged_in?(session) %>
         <button ng-init="show_comment_form = false"  ng-click="show_comment_form = !show_comment_form">New Comment</button>
@@ -25,31 +23,31 @@
         </form>
     <% end %>
 
+    <h4>Comments</h4>
 
+    <!-- Display comments -->
     <% @comments.each do |comment| %>
 
-      <% user = User.find(comment.user_id) %>
-      <h6><a href="/u/<%= user.name %>"><%= user.name %></a></h6>
-      <%= comment.content %>
-      <br>
-
-      <!-- Add replie to comment -->
-      <% if Helpers.is_logged_in?(session) %>
-        <button ng-init="show_replie_form = false"  ng-click="show_replie_form = !show_replie_form">Replie to comment</button>
-        <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_replie_form">
-          <textarea name="content" placeholder="replie"></textarea>
-          <input type="hidden" name="comment_id" value="<%= comment.id %>">
-          <input type="submit" value="Replie">
-        </form>
-      <% end %>
-
       <ul>
-        <% comment.replies.each do |replie| %>
-          <% replier = User.find(replie.user_id) %>
-          <h6><a href="/u/<%= replier.name %>"><%= replier.name %></a></h6>
-          <%= replie.content %>
+        <% user = User.find(comment.user_id) %>
+        <h6><a href="/u/<%= user.name %>"><%= user.name %></a></h6>
+        <p><%= comment.content %></p>
+
+        <!-- Add reply to comment -->
+        <% if Helpers.is_logged_in?(session) %>
+          <button ng-init="show_reply_form_<%= comment.id %> = false"  ng-click="show_reply_form_<%= comment.id %> = !show_reply_form_<%= comment.id %>">Reply</button>
+          <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= comment.id %>">
+            <textarea name="content" placeholder="reply"></textarea>
+            <input type="hidden" name="parent_id" value="<%= comment.id %>">
+            <input type="submit" value="Reply">
+          </form>
         <% end %>
+
+        <!-- Display replies -->
+        <%= erb :"posts/show_comment_replies", locals: {replies: comment.replies} %>
       </ul>
+
+
 
     <% end %> <!-- End of comments -->
 

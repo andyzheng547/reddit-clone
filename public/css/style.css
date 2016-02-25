@@ -1,4 +1,4 @@
-#user-options, #form-close {
+#user-options, .toggle-ua-form, .subreddit-info {
   float: right;
 }
 
@@ -11,6 +11,7 @@ body {
   height: 100%;
 }
 
-.subreddit-info {
-  float: right;
+
+div button.btn {
+  border: 1px solid rgb(60, 60, 60);
 }

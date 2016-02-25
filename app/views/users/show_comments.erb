@@ -1,0 +1,14 @@
+<h3>Comments</h3>
+<br>
+
+<% @user.comments.each.with_index(1) do |comment| %>
+
+  <% if comment.post.post_type_id == "1" %>
+    <a href="<%= comment.post.link %>"><%= comment.post.title %></a>
+    <p>submitted to <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a></p>
+  <% else %>
+    <a href="<%= comment.post.title %>"><%= comment.post.title %></a>
+    <p>submitted to <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a></p>
+  <% end %>
+
+<% end %>

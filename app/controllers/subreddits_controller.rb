@@ -12,7 +12,7 @@ class SubredditsController < ApplicationController
     @posts, max_pages = Helpers.get_subreddit_posts(params[:subreddit_slug], params[:page_num].to_i)
     redirect "/r/#{@subreddit.slug}/pg/1" if params[:page_num].to_i <= 0 || params[:page_num].to_i > max_pages
 
-    erb :"subreddits/show"
+    erb :"subreddits/index"
   end
 
   get '/r/subreddit/new' do
@@ -41,9 +41,6 @@ class SubredditsController < ApplicationController
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
     if @subreddit.is_private == true
       @subscription = Subscription.find_or_create_by(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id, access: false)
-      @subscription_request = SubscriptionRequest.find_or_create_by(user_id: Helpers.current_user(session).id, subscription_id: @subscription.id)
-      @subscription_request.status = "pending"
-      @subscription_request.save
       redirect "/r/#{@subreddit.slug}"
     else
       @subscription = Subscription.create(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id, access: true)
@@ -53,22 +50,10 @@ class SubredditsController < ApplicationController
 
   # Change subscription request status and subsciption access for the requester
   post '/r/approve_request/:request_id' do
-    request = SubscriptionRequest.find(params[:request_id])
-    request.update(status: "approved")
-
     subscription = Subscription.find(request.subscription_id)
     subscription.update(access: true)
 
     redirect to "/u/#{Helpers.current_user(session).name}"
   end
-
-  # Changes subscription request status
-  post '/r/deny_request/:request_id' do
-    request = SubscriptionRequest.find(params[:request_id])
-    request.update(status: "denied")
-
-    redirect to "/u/#{Helpers.current_user(session).name}"
-  end
-
 
 end

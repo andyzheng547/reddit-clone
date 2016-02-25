@@ -16,66 +16,34 @@
 
   <div class="container">
 
+    <a href="/"><button>Home</button></a>
+
     <!-- Messages when the user signups, logins, and logouts (successful or unsuccessful) -->
     <% unless locals.empty? %>
       <%= message %>
     <% end %>
 
-    <!-- Angular shows and hides signup/login form when signup/login button clicked -->
-    <!-- ng-app initializes the app. ng-init sets a variable of show_form as false -->
-    <div ng-init="show_form = false">
-
-      <!-- If user is logged in, should logout and profile link, otherwise show signup/login button -->
+    <!-- If user is logged in, should logout and profile link, otherwise show signup/login button -->
+    <% if Helpers.is_logged_in?(session) %>
       <div id="user-options">
-        <% if Helpers.is_logged_in?(session) %>
-          <h4><%= Helpers.current_user(session).name %></h4>
-          <a href="/u/<%= Helpers.current_user(session).name %>"><button>Profile</button></a>
-          <a href="/r/subreddit/new"><button>New Subreddit</button></a>
-          <a href="/posts/new"><button>New Post</button></a>
-          <form method="post" action="/logout">
-            <input type="submit" value="Log Out">
-          </form>
-
-        <% else %>
-
-          <!-- Signup / Login button - toggles the show and hide for form -->
-          <!-- Clicking causes variable show_form to switch from true/false -->
-         <button ng-click="show_form = !show_form" >Sign up / Login</button>
-        <% end %>
+        <h4><%= Helpers.current_user(session).name %></h4>
+        <a href="/u/<%= Helpers.current_user(session).name %>"><button>Profile</button></a>
+        <a href="/r/subreddit/new"><button>New Subreddit</button></a>
+        <a href="/posts/new"><button>New Post</button></a>
+        <form method="post" action="/logout">
+          <input type="submit" value="Log Out">
+        </form>
       </div>
 
-      <br><br>
+    <% else %>
+     <button class="toggle-ua-form">Sign up / Login</button>
+    <% end %>
 
-      <!-- Signup / Login Form -->
-      <!-- Shows and hides when user clicks the Signup/Login button above -->
-      <div id="user-authenticate-forms" ng-show="show_form">
-
-        <!-- Button with x for hiding form -->
-        <button id="form-close" ng-click="show_form = !show_form">X</button><br>
-
-        <div class="row">
-
-          <!-- Signup Form -->
-          <form class="col-xs-6" id="signup_form" method="post" action="/signup" >
-            <h3>Create a new account</h3><br>
-
-            <input type="text" name="name" placeholder="choose a username"><br>
-            <input type="password" name="password" placeholder="password"><br>
-            <input type="submit" value="Sign Up" ng-submit="show_form = !show_form">
-          </form>
-
-          <!-- Login Form -->
-          <form class="col-xs-6" id="login_form" method="post" action="/login">
-            <h3>Log In</h3><br>
-
-            <input type="text" name="name" placeholder="enter username"><br>
-            <input type="password" name="password" placeholder="password"><br>
-            <input type="submit" value="Log In" ng-submit="show_form = !show_form">
-          </form>
-
-        </div> <!-- .row  -->
-      </div> <!-- #user-authentication-forms  -->
-    </div> <!-- end of angular ng-app  -->
+    <!-- User Authentication form - signups and logins -->
+    <!-- Toggles with Signup/Login button or the X (insde ua_form) -->
+     <div id="ua-form">
+      <%= erb :ua_form %>
+     </div>
 
     <br><br>
 
@@ -83,6 +51,17 @@
     <%= yield %>
 
   </div> <!-- .container  -->
+
+  <!-- Javascript for toggling ua-form -->
+  <script type="text/javascript">
+    $(function(){
+      $("#ua-form").hide();
+    });
+
+    $(".toggle-ua-form").click(function(){
+      $( "#ua-form").toggle();
+    });
+  </script>
 
 </body> 
 </html>

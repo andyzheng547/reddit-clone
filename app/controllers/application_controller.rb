@@ -9,10 +9,9 @@ class ApplicationController < Sinatra::Base
     set :session_secret, "secret"
   end
 
-  get '/test' do
-    comment = Comment.find(1)
-    "#{comment.methods}"
-  end
+  # get '/test' do
+  #   
+  # end
 
   # Index has posts from all subreddits
   get '/' do
@@ -51,7 +50,7 @@ class ApplicationController < Sinatra::Base
       # Success
       if @user && @user.authenticate(params[:password])
         session[:user_id] = @user.id
-        erb :index, locals: {message: "Successful login. Welcome back."}
+        redirect "/u/#{@user.name}"
       # Failure - wrong password for username
       else
         erb :index, locals: {message: "You entered the wrong password."}
@@ -65,7 +64,7 @@ class ApplicationController < Sinatra::Base
 
   post '/logout' do
     session.clear
-    erb :index, locals: {message: "You have been logged out."}
+    redirect "/"
   end
 
 end

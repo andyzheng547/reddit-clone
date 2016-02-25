@@ -1,0 +1,23 @@
+<ul>
+  <% replies.each do |reply| %>
+    <% replier = User.find(reply.user_id) %>
+    <h6><a href="/u/<%= replier.name %>"><%= replier.name %></a></h6>
+    <p><%= reply.content %></p>
+
+    <br><br><br>
+    <!-- Add reply to reply -->
+    <% if Helpers.is_logged_in?(session) %>
+      <button ng-init="show_reply_form_<%= reply.id %> = false"  ng-click="show_reply_form_<%= reply.id %>  = !show_reply_form_<%= reply.id %> ">Reply</button>
+      <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= reply.id %> ">
+        <textarea name="content" placeholder="reply"></textarea>
+        <input type="hidden" name="parent_id" value="<%= reply.id %>">
+        <input type="submit" value="Reply">
+      </form>
+    <% end %>
+
+
+    <%= erb :"posts/show_comment_replies", locals: {replies: reply.replies} %>
+
+  <% end %>
+
+</ul>

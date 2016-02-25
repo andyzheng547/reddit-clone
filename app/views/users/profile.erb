@@ -1,56 +1,46 @@
-<h1>/u/<%= @user.name %> Profile</h1>
+<h1>/u/<%= @user.name %> profile</h1>
 
-<% if @user == Helpers.current_user(session) %>
-  <button><a href="/u/<%= @user.name %>/edit">Edit Profile</a></button>
-<% end %>
+<!-- Buttons to toggle show/hide -->
+<div class="btn-group btn-group-lg" role="group" aria-label="user_navigation">
+  <button type="button" class="btn btn-secondary show-btn" target="comments">Comments</button>
+  <button type="button" class="btn btn-secondary show-btn" target="posts">Posts</button>
 
-<br><br>
-
-<h3>Subreddits</h3><br>
-<% @user.subreddits.each do |subreddit| %>
-  <a href="/r/<%= subreddit.slug %>">/r/<%= subreddit.name %></a><br>
-<% end %>
-
-<h3>Posts</h3>
-<% @user.posts.order(id: :desc).each do |post| %>
-  <% subreddit = Subreddit.find(post.subreddit_id) %>
-  <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a>
-  <% if post.post_type_id == 1%>
-    (<%= post.link_host %>)
+  <% if Helpers.current_user(session) == @user %>
+    <button type="button" class="btn btn-secondary show-btn" target="subreddits">Subreddits</button>  
+    <button type="button" class="btn btn-secondary show-btn" target="mods">Moderator of</button>
   <% end %>
-  <br><br>
+</div>
+
+<!-- Partials -->
+<div id="comments" class="target-div">
+  <%= erb :"users/show_comments" %>
+</div>
+
+<div id="posts" class="target-div">
+  <%= erb :"users/show_posts" %>
+</div>
+
+<% if Helpers.current_user(session) == @user %>
+  <div id="subreddits" class="target-div">
+    <%= erb :"users/show_subreddits" %>
+  </div>
+
+  <div id="mods" class="target-div">
+    <%= erb :"users/show_mods" %>
+  </div>
 <% end %>
 
-<h3>Moderator of: </h3><br>
-<ul>
-<% @user.moderators.each do |mod_status| %>
+<!-- Javascript to show and hide partials -->
+<script type="text/javascript">
 
-  <% subreddit = Subreddit.find(mod_status.subreddit_id) %>
-  <h4><a href="/r/<%= subreddit.slug %>">/r/<%= subreddit.name %></a></h4><br>
+  $(function(){
+    $("#posts, #subreddits, #mods").hide();
+  });
 
-  <% if subreddit.is_private == true %>
-    <ul>
-      <!-- If the subreddit is private and the subscriber does not have access, show 2 forms with submit buttons to approve or deny access for the person -->
-      <% subreddit.subscriptions.each do |subscription| %>
-        <% requester = User.find(subscription.user_id) %>
-        <% request = SubscriptionRequest.find_by(subscription_id: subscription.id, user_id: requester.id) %>
 
-        <% if subscription.access == false && request.status == "pending" %>
+  $(".show-btn").click(function(){
+    $(".target-div").hide();
+    $( "#" + $(this).attr("target") ).show();
+  });
 
-          <h6><%= requester.name %></h6><br>
-            <form method="post" action="/r/approve_request/<%= request.id %>">
-              <input type="submit" value="Approve Request">
-            </form>
-
-            <form method="post" action="/r/deny_request/<%= request.id %>">
-              <input type="submit" value="Deny Request">
-            </form>
-
-        <% end %>
-
-      <% end %> <!-- end of subreddit.subscriptions each loop -->
-    </ul>
-  <% end %>
-
-<% end %>
-</ul>
+</script>
