@@ -1,11 +1,24 @@
 <h1>/u/<%= @user.name %> profile</h1>
 
+<!-- Edit Profile link -->
+<a href="/u/<%= @user.name %>/edit">
+  <button>Edit Profile</button>
+</a>
+<br><br>
+
+<!-- Edit Profile link -->
+<a href="/u/<%= @user.name %>/delete">
+  <button>Delete Profile</button>
+</a>
+<br><br>
+
+
 <!-- Buttons to toggle show/hide -->
 <div class="btn-group btn-group-lg" role="group" aria-label="user_navigation">
   <button type="button" class="btn btn-secondary show-btn" target="comments">Comments</button>
   <button type="button" class="btn btn-secondary show-btn" target="posts">Posts</button>
 
-  <% if Helpers.current_user(session) == @user %>
+  <% if session[:user_id] != nil && @user == Helpers.current_user(session)%>
     <button type="button" class="btn btn-secondary show-btn" target="subreddits">Subreddits</button>  
     <button type="button" class="btn btn-secondary show-btn" target="mods">Moderator of</button>
   <% end %>
@@ -20,7 +33,7 @@
   <%= erb :"users/show_posts" %>
 </div>
 
-<% if Helpers.current_user(session) == @user %>
+<% if session[:user_id] != nil && @user == Helpers.current_user(session)%>
   <div id="subreddits" class="target-div">
     <%= erb :"users/show_subreddits" %>
   </div>

@@ -28,7 +28,7 @@
       <div id="user-options">
         <h4><%= Helpers.current_user(session).name %></h4>
         <a href="/u/<%= Helpers.current_user(session).name %>"><button>Profile</button></a>
-        <a href="/r/subreddit/new"><button>New Subreddit</button></a>
+        <a href="/r/subreddits/new"><button>New Subreddit</button></a>
         <a href="/posts/new"><button>New Post</button></a>
         <form method="post" action="/logout">
           <input type="submit" value="Log Out">

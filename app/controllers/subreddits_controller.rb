@@ -8,14 +8,16 @@ class SubredditsController < ApplicationController
 
   get '/r/:subreddit_slug/pg/:page_num' do
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
-    @user = Helpers.current_user(session)
+    @user = Helpers.current_user(session) if session[:user_id] != nil
     @posts, max_pages = Helpers.get_subreddit_posts(params[:subreddit_slug], params[:page_num].to_i)
+
+    # For safety
     redirect "/r/#{@subreddit.slug}/pg/1" if params[:page_num].to_i <= 0 || params[:page_num].to_i > max_pages
 
     erb :"subreddits/index"
   end
 
-  get '/r/subreddit/new' do
+  get '/r/subreddits/new' do
     if Helpers.is_logged_in?(session)
       erb :"subreddits/new"
     else
@@ -23,7 +25,7 @@ class SubredditsController < ApplicationController
     end
   end
 
-  post '/r/subreddit/new' do
+  post '/r/subreddits/new' do
     if existing_subreddit = Subreddit.find_by(name: params[:name]) || params[:name] == "all"
       erb :"subreddits/new", locals: {message: "That subreddit already exists</a>."}
     elsif !params[:name].gsub(" ", "").empty?
@@ -48,8 +50,41 @@ class SubredditsController < ApplicationController
     end
   end
 
+  post '/r/:subreddit_slug/unsubscribe' do
+    subreddit = Subreddit.find(params[:subreddit_id])
+
+    # If the user was the moderator and there are no other mods, find another subscriber to make a mod or delete the subreddit.
+    if subreddit.moderators.count == 1 && mod_status = Moderator.find_by(user_id: Helpers.current_user(session).id, subreddit_id: subreddit.id)
+      if subreddit.subscriptions.where(access: true).count > 1
+        new_mod_user_id = subreddit.subscriptions.where(access: true).second.user_id
+        mod_status.update(user_id: new_mod_user_id)
+      else
+        # delete_all may not exist if there are no other associations
+        if subreddit.methods.include?(:delete_all)
+          subreddit.delete_all
+        else
+          subreddit.delete
+        end
+        if mod_status.methods.include?(:delete_all)
+          mod_status.delete_all
+        else
+          mod_status.delete
+        end
+      end
+    end
+
+    subscription = Subscription.find_by(subreddit_id: subreddit.id, user_id: Helpers.current_user(session).id)
+    if subscription.methods.include?(:delete_all)
+      subscription.delete_all
+    else
+      subscription.delete
+    end
+
+    redirect to "/u/#{Helpers.current_user(session).name}"
+  end
+
   # Change subscription request status and subsciption access for the requester
-  post '/r/approve_request/:request_id' do
+  post '/r/approve_sub/:subscription_id' do
     subscription = Subscription.find(request.subscription_id)
     subscription.update(access: true)
 

@@ -14,9 +14,12 @@
   <h3>Content: </h3><textarea name="content" placeholder="content"></textarea><br>
 
   <h3>Post to: </h3><br>
-  <% Helpers.current_user(session).subreddits.each do |subreddit| %>
-    <input type="radio" name="subreddit_id" value="<%= subreddit.id %>"><%= subreddit.name %>
-  <% end %>
+  <input list="subreddits" name="subreddit_name">
+  <datalist id="subreddits">
+    <% Subreddit.all.each do |subreddit| %>
+      <option value="<%= subreddit.name %>">
+    <% end %>
+  </datalist>
 
   <br>
   <input type="submit" value="Submit New Post">

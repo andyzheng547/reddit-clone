@@ -4,19 +4,34 @@
     <h6><a href="/u/<%= replier.name %>"><%= replier.name %></a></h6>
     <p><%= reply.content %></p>
 
-    <br><br><br>
     <!-- Add reply to reply -->
     <% if Helpers.is_logged_in?(session) %>
       <button ng-init="show_reply_form_<%= reply.id %> = false"  ng-click="show_reply_form_<%= reply.id %>  = !show_reply_form_<%= reply.id %> ">Reply</button>
       <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= reply.id %> ">
         <textarea name="content" placeholder="reply"></textarea>
         <input type="hidden" name="parent_id" value="<%= reply.id %>">
+        <input type="hidden" name="post_id" value="<%= @post.id %>">
         <input type="submit" value="Reply">
       </form>
     <% end %>
 
+    <!-- Load more replies if any -->
+    <% if reply.replies.count > 0 %>
+      <button id="show_comment<%=reply.id %>_replies">load more comments</button>
+      <div id="comment<%= reply.id %>">
+        <%= erb :"posts/show_comment_replies", locals: {replies: reply.replies} %>
+      </div>
 
-    <%= erb :"posts/show_comment_replies", locals: {replies: reply.replies} %>
+      <script type="text/javascript">
+        $("#comment<%= reply.id %>").hide();
+        $("#show_comment<%=reply.id %>_replies").click(function(){
+          $( "#comment<%= reply.id %>").show();
+          $(this).hide()
+        });    
+      </script>
+
+    <% end %>
+
 
   <% end %>
 

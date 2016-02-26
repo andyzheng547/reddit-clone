@@ -9,9 +9,10 @@ class ApplicationController < Sinatra::Base
     set :session_secret, "secret"
   end
 
-  # get '/test' do
-  #   
-  # end
+  get '/test' do
+    session.clear
+    redirect "/"
+  end
 
   # Index has posts from all subreddits
   get '/' do

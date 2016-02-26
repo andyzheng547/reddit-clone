@@ -1,0 +1,22 @@
+<% if Helpers.is_logged_in?(session) %>
+  <% if subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id) %>
+
+    <form method="post" action="/r/<%= @subreddit.slug %>/unsubscribe">
+      <input type="hidden" name="subreddit_id" value="<%= @subreddit.id %>">
+      <input type="submit" value="Unsubscribe">
+    </form>
+
+  <% else %>
+
+    <form method="post" action="/r/<%= @subreddit.slug %>/subscribe">
+      <input type="submit" value="Subscribe">
+    </form>
+
+  <% end %>
+<% end %>    
+<br>
+
+<h4><a href="/r/<%= @subreddit.slug %>">/r/<%= @subreddit.name %></a></h4>
+<br>
+<h5>Description</h5>
+<p><%= @subreddit.description %></p>

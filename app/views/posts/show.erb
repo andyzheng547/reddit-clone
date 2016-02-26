@@ -1,3 +1,9 @@
+<!-- Subreddit info and subscription form -->
+<br><br><br>
+<div class="subreddit-info">
+  <%= erb :"subreddits/subreddit_info" %>
+</div>
+
 <!-- Comments if subreddit is not private or if the user's subscription has access equal to true -->
 <% if @subreddit.is_private == false || 
   (@subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
@@ -28,26 +34,27 @@
     <!-- Display comments -->
     <% @comments.each do |comment| %>
 
-      <ul>
-        <% user = User.find(comment.user_id) %>
-        <h6><a href="/u/<%= user.name %>"><%= user.name %></a></h6>
-        <p><%= comment.content %></p>
+      <!-- Only display the parent comments first -->
+      <% if comment.parent_id == nil %>
+        <ul>
+          <% user = User.find(comment.user_id) %>
+          <h6><a href="/u/<%= user.name %>"><%= user.name %></a></h6>
+          <p><%= comment.content %></p>
 
-        <!-- Add reply to comment -->
-        <% if Helpers.is_logged_in?(session) %>
-          <button ng-init="show_reply_form_<%= comment.id %> = false"  ng-click="show_reply_form_<%= comment.id %> = !show_reply_form_<%= comment.id %>">Reply</button>
-          <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= comment.id %>">
-            <textarea name="content" placeholder="reply"></textarea>
-            <input type="hidden" name="parent_id" value="<%= comment.id %>">
-            <input type="submit" value="Reply">
-          </form>
-        <% end %>
+          <!-- Add reply to comment -->
+          <% if Helpers.is_logged_in?(session) %>
+            <button ng-init="show_reply_form_<%= comment.id %> = false"  ng-click="show_reply_form_<%= comment.id %> = !show_reply_form_<%= comment.id %>">Reply</button>
+            <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= comment.id %>">
+              <textarea name="content" placeholder="reply"></textarea>
+              <input type="hidden" name="parent_id" value="<%= comment.id %>">
+              <input type="submit" value="Reply">
+            </form>
+          <% end %>
 
-        <!-- Display replies -->
-        <%= erb :"posts/show_comment_replies", locals: {replies: comment.replies} %>
-      </ul>
-
-
+          <!-- Display replies -->
+          <%= erb :"posts/show_comment_replies", locals: {replies: comment.replies} %>
+        </ul>
+      <% end %>
 
     <% end %> <!-- End of comments -->
 
@@ -56,16 +63,3 @@
   <h1>Sorry, but you need to be subscribed to view this subreddit.</h1>
 <% end %>
 
-<!-- Subreddit info and subscription form -->
-<div class="subreddit-info">
-  <form method="post" action="/r/<%= @subreddit.slug %>/subscribe">
-    <input type="submit" value="Subscribe">
-  </form>
-  <br>
-
-  <h4><a href="/r/<%= @subreddit.slug %>">/r/<%= @subreddit.name %></a></h4>
-  <br>
-  <h5>Descripton</h5>
-  <p><%= @subreddit.description %></p>
-
-</div>

@@ -39,20 +39,24 @@ class UsersController < ApplicationController
     @user = User.find(params[:user_id])
     mod_statuses = Moderator.where(user_id: @user.id)
 
-    # Find each subreddit the user a moderator of. If the subreddit does not have another moderator:
-      # find the next subscriber with access and make them a mod, otherwise delete the subreddit since there are no subscribed users
-    mod_statuses.each do |mod_of|
-      subreddit = Subreddit.find(mod_of.subreddit_id)
+    # Find each subreddit the user a moderator of. 
+    # If the subreddit does not have another moderator find another subscriber to make a mod or delete the subreddit.
+    mod_statuses.each do |mod|
+      subreddit = Subreddit.find(mod.subreddit_id)
 
-      if next_mod = Subscription.where({subreddit_id: subreddit.id, access: true}).second && subreddit.moderators.count == 1
-        Moderator.create(subreddit_id: subreddit.id, user_id: next_moderator.id)
-      else
-        subreddit.delete
+      if subreddit.moderators.count == 1
+        if subreddit.subscriptions.where(access: true).count > 1
+          new_mod_user_id = subreddit.subscriptions.where(access: true).second.user_id
+          mod.update(user_id: new_mod_user_id)
+        else
+          subreddit.delete_all
+        end
       end
+
     end # end of loop
 
-    @user.delete
-    erb :index, locals: {message: "Deleted account and reassigned moderator statuses."}
+    @user.delete_all
+    redirect "/"
   end
 
 end

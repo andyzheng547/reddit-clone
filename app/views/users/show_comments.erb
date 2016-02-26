@@ -1,14 +1,17 @@
 <h3>Comments</h3>
 <br>
 
-<% @user.comments.each.with_index(1) do |comment| %>
+<ul>
+  <% @user.comments.each.with_index(1) do |comment, index| %>
 
-  <% if comment.post.post_type_id == "1" %>
-    <a href="<%= comment.post.link %>"><%= comment.post.title %></a>
-    <p>submitted to <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a></p>
-  <% else %>
-    <a href="<%= comment.post.title %>"><%= comment.post.title %></a>
-    <p>submitted to <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a></p>
+    <% post = Post.find(comment.post_id) %>
+    <% if post.post_type_id == "1" %>
+      <%= index %> <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a> (<%= post.link_host %>)
+      <p>submitted to <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a></p>
+    <% else %>
+      <%= index %> <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a>
+      <p>submitted to <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a></p>
+    <% end %>
+
   <% end %>
-
-<% end %>
+</ul>
