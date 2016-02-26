@@ -38,6 +38,26 @@ class SubredditsController < ApplicationController
     end
   end
 
+  get '/r/:subreddit_slug/add_mod' do
+    @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
+    erb :"subreddits/add_mod"
+  end
+
+  post '/r/:subreddit_slug/add_mod' do
+    subreddit = Subreddit.find(params[:subreddit_id])
+    subscribers_user_ids = Subscription.where(subreddit_id: subreddit.id, access: true).pluck(:user_id)
+    if params[:new_mod_username].empty?
+      # If username is empty do nothing
+    elsif found_user = User.find_by(name: params[:new_mod_username])
+      # if username entered belongs to an actual user 
+      # check that user is subscribed to the subreddit before making them a mod
+      if subscribers_user_ids.include?(found_user.id)
+        new_mod = Moderator.create(subreddit_id: subreddit.id, user_id: found_user.id )
+      end
+    end
+    redirect "/u/#{Helpers.current_user(session).name}"
+  end
+
   # Posted from form in subreddit page via the "Subscribe" button inside the subreddit side info
   post '/r/:subreddit_slug/subscribe' do
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])

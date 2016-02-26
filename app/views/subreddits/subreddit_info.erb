@@ -20,3 +20,10 @@
 <br>
 <h5>Description</h5>
 <p><%= @subreddit.description %></p>
+
+<h5>Moderators</h5>
+<% @subreddit.moderators.each do |mod| %>
+
+  <p><%= User.find(mod.user_id).name %></p>
+
+<% end %>

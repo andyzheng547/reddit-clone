@@ -1,0 +1,21 @@
+<h1>Add a mod to /r/<%= @subreddit.name %></h1>
+
+<form method="post" action="/r/<%= @subreddit.slug %>/add_mod">
+  <input type="hidden" name="subreddit_id" value="<%= @subreddit.id %>">
+  <input list="subscribers" name="new_mod_username">
+
+  <% current_mod_user_ids = Moderator.where(subreddit_id: @subreddit.id).pluck(:user_id) %>
+
+  <datalist id="subscribers">
+  <% @subreddit.subscriptions.where(access: true).each do |subscriber| %>
+    <% user = User.find(subscriber.user_id) %>
+
+    <!-- Subscribers where access is true and they are not current mods -->
+    <% if !current_mod_user_ids.include?(subscriber.user_id) %>
+      <option value="<%= user.name %>">
+    <% end %>
+  <% end %>
+  </datalist>
+
+  <input type="submit" value="Add mod">
+</form>
