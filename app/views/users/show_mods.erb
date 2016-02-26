@@ -7,9 +7,8 @@
     <ul>
       <% mod.subreddit.subscriptions.each do |subscription| %>
         <% if mod.subreddit.is_private == true &&  subscription.access == false %>
-          <a href="/u/<%= sub.user.name %>"><%= subscription.user.name %></a>
-          <form method="post" action="/r/approve_sub/<%= mod.subreddit.name %>">
-            <input type="hidden" name="subscription_id" value="<%= sub.id %>">
+          <a href="/u/<%= subscription.user.name %>"><%= subscription.user.name %></a>
+          <form method="post" action="/r/approve_sub/<%= subscription.id %>">
             <input type="submit" value="Approve">
           </form>
         <% end %>

@@ -85,7 +85,7 @@ class SubredditsController < ApplicationController
 
   # Change subscription request status and subsciption access for the requester
   post '/r/approve_sub/:subscription_id' do
-    subscription = Subscription.find(request.subscription_id)
+    subscription = Subscription.find(params[:subscription_id])
     subscription.update(access: true)
 
     redirect to "/u/#{Helpers.current_user(session).name}"
