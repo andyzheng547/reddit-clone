@@ -2,13 +2,14 @@
 
 <ul>
   <% @user.moderators.each do |mod| %>
-
-    <h5><%= mod.subreddit.name %></h5>
-    <a href="/r/<%= mod.subreddit.slug %>/add_mod">Add a mod</a>
+    <br>
+    <h5><a href="/r/<%= mod.subreddit.slug %>">/r/<%= mod.subreddit.name %></a></h5>
+    <a href="/r/<%= mod.subreddit.slug %>/add_mod"><button>Add a mod</button></a>
+    <a href="/r/<%= mod.subreddit.slug %>/edit"><button>Edit subreddit</button></a>
     <ul>
       <% mod.subreddit.subscriptions.each do |subscription| %>
         <% if mod.subreddit.is_private == true &&  subscription.access == false %>
-          <p>Approve access for: <a href="/u/<%= subscription.user.name %>"><%= subscription.user.name %></a></p>
+          <p>Approve access for: <a href="/u/<%= subscription.user.name %>">/u/<%= subscription.user.name %></a></p>
           <form method="post" action="/r/approve_sub/<%= subscription.id %>">
             <input type="submit" value="Approve">
           </form>

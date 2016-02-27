@@ -1,0 +1,20 @@
+<h1>Edit /r/<%= @subreddit.name %></h1>
+
+<form method="post" action="/r/<%= @subreddit.slug %>/edit">
+
+  <label for="description">Description:</label>
+  <textarea name="description" placeholder="description"><%= @subreddit.description %></textarea><br>
+
+  <label for="is_private">Set to Private: </label><br>
+  <% if @subreddit.is_private == true %>
+    <input type="radio" name="is_private" value="true" checked> Yes <br>
+    <input type="radio" name="is_private" value="false"> No <br>
+  <% else %>
+    <input type="radio" name="is_private" value="true"> Yes <br>
+    <input type="radio" name="is_private" value="false" checked> No <br>
+  <% end %>
+
+  <input type="hidden" name="subreddit_id" value="<%= @subreddit.id %>">
+  <input type="submit" value="Edit Subreddit">
+
+</form>

@@ -38,6 +38,19 @@ class SubredditsController < ApplicationController
     end
   end
 
+  get '/r/:subreddit_slug/edit' do
+    @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
+    erb :"subreddits/edit"
+  end
+
+  post '/r/:subreddit_slug/edit' do
+    @subreddit = Subreddit.find(params[:subreddit_id])
+    @subreddit.update(description: params[:description]) if !params[:description].empty?
+    @subreddit.update(is_private: params[:is_private])
+
+    redirect "/r/#{@subreddit.slug}"
+  end
+
   get '/r/:subreddit_slug/add_mod' do
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
     erb :"subreddits/add_mod"

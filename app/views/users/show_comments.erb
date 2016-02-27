@@ -8,9 +8,11 @@
     <% if post.post_type_id == "1" %>
       <%= index %> <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a> (<%= post.link_host %>)
       <p>submitted to <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a></p>
+      <ul><p><%= comment.content %></p></ul>
     <% else %>
       <%= index %> <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a>
       <p>submitted to <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a></p>
+      <ul><p><%= comment.content %></p></ul>
     <% end %>
 
   <% end %>
