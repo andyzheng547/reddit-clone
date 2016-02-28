@@ -4,14 +4,14 @@ class ApplicationController < Sinatra::Base
   configure do
     set :public_folder, 'public'
     set :views, 'app/views'
+    set :show_exceptions, :after_handler
 
     enable :sessions
     set :session_secret, "secret"
   end
 
-  get '/test' do
-    session.clear
-    redirect "/"
+  error do
+    erb :error
   end
 
   # Index has posts from all subreddits
