@@ -1,4 +1,4 @@
-<% if Helpers.is_logged_in?(session) %>
+<% if logged_in? %>
   <% if subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id) %>
 
     <form method="post" action="/r/<%= @subreddit.slug %>/unsubscribe">

@@ -18,7 +18,7 @@
   <button type="button" class="btn btn-secondary show-btn" target="comments">Comments</button>
   <button type="button" class="btn btn-secondary show-btn" target="posts">Posts</button>
 
-  <% if session[:user_id] != nil && @user == Helpers.current_user(session)%>
+  <% if session[:user_id] != nil && @user == current_user%>
     <button type="button" class="btn btn-secondary show-btn" target="subreddits">Subreddits</button>  
     <button type="button" class="btn btn-secondary show-btn" target="mods">Moderator of</button>
   <% end %>
@@ -33,7 +33,7 @@
   <%= erb :"users/show_posts" %>
 </div>
 
-<% if session[:user_id] != nil && @user == Helpers.current_user(session)%>
+<% if session[:user_id] != nil && @user == current_user%>
   <div id="subreddits" class="target-div">
     <%= erb :"users/show_subreddits" %>
   </div>

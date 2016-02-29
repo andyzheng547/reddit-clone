@@ -4,7 +4,7 @@
 class PostsController < ApplicationController
 
   get '/posts/new' do
-    if Helpers.is_logged_in?(session)
+    if logged_in?(session)
       erb :"posts/new"
     else
       erb :index, locals: {message: "You need to be logged in to create a new post."}
@@ -37,7 +37,7 @@ class PostsController < ApplicationController
             title: params[:title],
             link: params[:link], 
             post_type_id: params[:post_type_id], 
-            user_id: Helpers.current_user(session).id, 
+            user_id: current_user.id, 
             subreddit_id: subreddit.id)
           redirect "/r/#{@post.subreddit.slug}/#{@post.slug}/comments"
         end
@@ -49,7 +49,7 @@ class PostsController < ApplicationController
             title: params[:title],
             content: params[:content], 
             post_type_id: params[:post_type_id], 
-            user_id: Helpers.current_user(session).id, 
+            user_id: current_user.id, 
             subreddit_id: subreddit.id)
           redirect "/r/#{@post.subreddit.slug}/#{@post.slug}/comments"
       end
@@ -58,7 +58,7 @@ class PostsController < ApplicationController
 
   # Show a particular post in subreddit
   get '/r/:subreddit_slug/:post_slug/comments' do
-    @user = Helpers.current_user(session) if session[:user_id] != nil
+    @user = current_user if session[:user_id] != nil
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
     @post = Post.find_by_slug(params[:post_slug])
     @comments = Comment.where(post_id: @post.id)
@@ -69,7 +69,7 @@ class PostsController < ApplicationController
     if !params[:content].gsub(" ", "").empty?
       @comment = Comment.create(
         content: params[:content],
-        user_id: Helpers.current_user(session).id,
+        user_id: current_user.id,
         post_id: params[:post_id]
       )
     end
@@ -81,7 +81,7 @@ class PostsController < ApplicationController
     if !params[:content].gsub(" ", "").empty?
       @comment = Comment.create(
         content: params[:content],
-        user_id: Helpers.current_user(session).id,
+        user_id: current_user.id,
         post_id: params[:post_id],
         parent_id: params[:parent_id]
       )

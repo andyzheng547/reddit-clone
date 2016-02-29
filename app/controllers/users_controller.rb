@@ -7,7 +7,7 @@ class UsersController < ApplicationController
 
   get '/u/:username/edit' do
     @user = User.find_by(name: params[:username])
-    redirect "/" if Helpers.current_user(session) != @user
+    redirect "/" if current_user != @user
     erb :"users/edit"
   end
 
@@ -31,7 +31,7 @@ class UsersController < ApplicationController
 
   get '/u/:username/delete' do
     @user = User.find_by(name: params[:username])
-    redirect "/" if Helpers.current_user(session) != @user
+    redirect "/" if current_user != @user
     erb :"users/delete"
   end
 
@@ -83,6 +83,7 @@ class UsersController < ApplicationController
         @user.delete
       end
       session.clear
+      @current_user = nil
       redirect "/"
     else
       redirect "/u/#{@user.name}"

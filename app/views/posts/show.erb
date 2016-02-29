@@ -20,7 +20,7 @@
     <br><br>
 
     <!-- Add a new comment -->
-    <% if Helpers.is_logged_in?(session) %>
+    <% if logged_in? %>
         <button ng-init="show_comment_form = false"  ng-click="show_comment_form = !show_comment_form">New Comment</button>
         <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_comment" ng-show="show_comment_form">
           <textarea name="content" placeholder="comment"></textarea>
@@ -42,7 +42,7 @@
           <p><%= comment.content %></p>
 
           <!-- Add reply to comment -->
-          <% if Helpers.is_logged_in?(session) %>
+          <% if logged_in? %>
             <button ng-init="show_reply_form_<%= comment.id %> = false"  ng-click="show_reply_form_<%= comment.id %> = !show_reply_form_<%= comment.id %>">Reply</button>
             <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= comment.id %>">
               <textarea name="content" placeholder="reply"></textarea>

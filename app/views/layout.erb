@@ -14,9 +14,45 @@
 </head>
 <body ng-app>
 
+  <!-- Navbar -->
+  <nav class="navbar navbar-default bg-faded">
+    <ul class="row">
+      <li><a class="navbar-brand col-sm-1" href="/">FRONT</a></li>
+
+      <!-- Shows users subreddits or if not logged in, public subreddits with highest sub count -->
+      <li class="col-sm-1">
+        <div class="btn-group navbar-btn">
+          <!-- Button for dropdown -->
+          <button class="btn dropdown-toggle" data-toggle="dropdown">MY SUBREDDITS</button>
+          <button class="btn dropdown-toggle" data-toggle="dropdown">
+            <span class="caret"></span>
+          </button>
+
+          <!-- Dropdown menu with subreddits --> 
+          <ul class="dropdown-menu">
+            <% if logged_in? %>
+              <% current_user.subreddits.limit(20).each do |subreddit| %>
+                <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
+                <li role="separator" class="divider"></li>
+              <% end %>
+            <% else %>
+              <% Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").each do |subreddit| %>
+                <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
+                <li role="separator" class="divider"></li>
+              <% end %>
+            <% end %>
+          </ul>
+        </div>
+      </li>
+
+      <% Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").each do |subreddit| %>
+        <li class="col-sm-1"><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
+      <% end %>
+    </ul>
+  </nav>
+
   <div class="container">
 
-    <a href="/"><button>Home</button></a>
 
     <!-- Messages when the user signups, logins, and logouts (successful or unsuccessful) -->
     <% unless locals.empty? %>
@@ -24,10 +60,10 @@
     <% end %>
 
     <!-- If user is logged in, should logout and profile link, otherwise show signup/login button -->
-    <% if Helpers.is_logged_in?(session) %>
+    <% if logged_in? %>
       <div id="user-options">
-        <h4><%= Helpers.current_user(session).name %></h4>
-        <a href="/u/<%= Helpers.current_user(session).name %>"><button>Profile</button></a>
+        <h4><%= current_user.name %></h4>
+        <a href="/u/<%= current_user.name %>"><button>Profile</button></a>
         <a href="/r/subreddits/new"><button>New Subreddit</button></a>
         <a href="/posts/new"><button>New Post</button></a>
         <form method="post" action="/logout">

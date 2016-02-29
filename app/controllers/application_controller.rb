@@ -1,6 +1,7 @@
 # Homepage and signups/logins
 
 class ApplicationController < Sinatra::Base
+
   configure do
     set :public_folder, 'public'
     set :views, 'app/views'
@@ -10,8 +11,8 @@ class ApplicationController < Sinatra::Base
     set :session_secret, "secret"
   end
 
-  error do
-    erb :error
+  not_found do
+    erb :"404_error"
   end
 
   # Index has posts from all subreddits
@@ -21,7 +22,7 @@ class ApplicationController < Sinatra::Base
 
   # Index shows up to 25 posts a page. The smaller the page number the more current the post entries are.
   get '/pg/:page_num' do
-    @posts, max_pages = Helpers.get_posts(params[:page_num].to_i)
+    @posts, max_pages = get_posts(params[:page_num].to_i)
     redirect "/r/#{@subreddit.slug}/pg/1" if params[:page_num].to_i <= 0 || params[:page_num].to_i > max_pages
     erb :index
   end
@@ -65,7 +66,48 @@ class ApplicationController < Sinatra::Base
 
   post '/logout' do
     session.clear
+    @current_user = nil
     redirect "/"
+  end
+
+# HELPERS
+  def current_user
+    @current_user || User.find(session[:user_id]) if session[:user_id]
+  end
+
+  def logged_in?
+    !!current_user
+  end
+
+  def get_posts(page_num)
+    total_posts = Post.all
+    max_pages = (total_posts.count.to_f / page_num).ceil
+
+    # Max pages cannot be 0
+    max_pages = 1 if max_pages == 0
+
+    # Orders posts by id. Higher ids are the current entries
+    select_posts = Post.all.order(id: :desc).limit(25 * page_num)
+    posts = select_posts.limit(select_posts.count % 25)
+
+    return posts, max_pages
+  end
+
+  # For getting posts from specific subreddits
+  def get_subreddit_posts(subreddit_slug, page_num)
+    subreddit = Subreddit.find_by_slug(subreddit_slug)
+    subreddit_posts = Post.where(subreddit_id: subreddit.id)
+
+    max_pages = (subreddit_posts.count.to_f / page_num).ceil
+
+    # Max pages cannot be 0
+    max_pages = 1 if max_pages == 0
+
+    # Orders posts by id. Higher ids are the current entries
+    select_posts = subreddit_posts.order(id: :desc).limit(25 * page_num)
+    posts = select_posts.limit(select_posts.count % 25)
+
+    return posts, max_pages
   end
 
 end

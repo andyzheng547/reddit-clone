@@ -8,8 +8,8 @@ class SubredditsController < ApplicationController
 
   get '/r/:subreddit_slug/pg/:page_num' do
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
-    @user = Helpers.current_user(session) if session[:user_id] != nil
-    @posts, max_pages = Helpers.get_subreddit_posts(params[:subreddit_slug], params[:page_num].to_i)
+    @user = current_user if session[:user_id] != nil
+    @posts, max_pages = get_subreddit_posts(params[:subreddit_slug], params[:page_num].to_i)
 
     # For safety
     redirect "/r/#{@subreddit.slug}/pg/1" if params[:page_num].to_i <= 0 || params[:page_num].to_i > max_pages
@@ -18,7 +18,7 @@ class SubredditsController < ApplicationController
   end
 
   get '/r/subreddits/new' do
-    if Helpers.is_logged_in?(session)
+    if logged_in?(session)
       erb :"subreddits/new"
     else
       erb :index, locals: {message: "You need to be logged in to create a new subreddit."}
@@ -30,8 +30,8 @@ class SubredditsController < ApplicationController
       erb :"subreddits/new", locals: {message: "That subreddit already exists</a>."}
     elsif !params[:name].gsub(" ", "").empty?
       @subreddit = Subreddit.create(name: params[:name], description: params[:description], is_private: params[:is_private])
-      subscription = Subscription.create(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id, access: true)
-      moderator = Moderator.create(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id)
+      subscription = Subscription.create(user_id: current_user.id, subreddit_id: @subreddit.id, access: true)
+      moderator = Moderator.create(user_id: current_user.id, subreddit_id: @subreddit.id)
       redirect "/r/#{@subreddit.slug}"
     else
       erb :"subreddits/new", locals: {message: "You forgot to enter a subreddit name."}
@@ -68,17 +68,17 @@ class SubredditsController < ApplicationController
         new_mod = Moderator.create(subreddit_id: subreddit.id, user_id: found_user.id )
       end
     end
-    redirect "/u/#{Helpers.current_user(session).name}"
+    redirect "/u/#{current_user.name}"
   end
 
   # Posted from form in subreddit page via the "Subscribe" button inside the subreddit side info
   post '/r/:subreddit_slug/subscribe' do
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
     if @subreddit.is_private == true
-      @subscription = Subscription.find_or_create_by(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id, access: false)
+      @subscription = Subscription.find_or_create_by(user_id: current_user.id, subreddit_id: @subreddit.id, access: false)
       redirect "/r/#{@subreddit.slug}"
     else
-      @subscription = Subscription.create(user_id: Helpers.current_user(session).id, subreddit_id: @subreddit.id, access: true)
+      @subscription = Subscription.create(user_id: current_user.id, subreddit_id: @subreddit.id, access: true)
       redirect "/r/#{@subreddit.slug}"
     end
   end
@@ -87,7 +87,7 @@ class SubredditsController < ApplicationController
     subreddit = Subreddit.find(params[:subreddit_id])
 
     # If the user was the moderator and there are no other mods, find another subscriber to make a mod or delete the subreddit.
-    if subreddit.moderators.count == 1 && mod_status = Moderator.find_by(user_id: Helpers.current_user(session).id, subreddit_id: subreddit.id)
+    if subreddit.moderators.count == 1 && mod_status = Moderator.find_by(user_id: current_user.id, subreddit_id: subreddit.id)
       if subreddit.subscriptions.where(access: true).count > 1
         new_mod_user_id = subreddit.subscriptions.where(access: true).second.user_id
         mod_status.update(user_id: new_mod_user_id)
@@ -106,14 +106,14 @@ class SubredditsController < ApplicationController
       end
     end
 
-    subscription = Subscription.find_by(subreddit_id: subreddit.id, user_id: Helpers.current_user(session).id)
+    subscription = Subscription.find_by(subreddit_id: subreddit.id, user_id: current_user.id)
     if subscription.methods.include?(:delete_all)
       subscription.delete_all
     else
       subscription.delete
     end
 
-    redirect to "/u/#{Helpers.current_user(session).name}"
+    redirect to "/u/#{current_user.name}"
   end
 
   # Change subscription request status and subsciption access for the requester
@@ -121,7 +121,7 @@ class SubredditsController < ApplicationController
     subscription = Subscription.find(params[:subscription_id])
     subscription.update(access: true)
 
-    redirect to "/u/#{Helpers.current_user(session).name}"
+    redirect to "/u/#{current_user.name}"
   end
 
 end
