@@ -16,12 +16,16 @@
 
   <!-- Navbar -->
   <nav class="navbar navbar-default bg-faded">
-    <ul class="row">
-      <li><a class="navbar-brand col-sm-1" href="/">FRONT</a></li>
+    <div class="container-fluid">
 
-      <!-- Shows users subreddits or if not logged in, public subreddits with highest sub count -->
-      <li class="col-sm-1">
-        <div class="btn-group navbar-btn">
+      <div class="navbar-header">
+        <a class="navbar-brand btn" href="/">FRONT</a>
+      </div>
+
+      <ul class="nav navbar-nav btn-group">
+
+        <!-- MY SUBREDDITS BUTTON - shows users subreddits or public subreddits with highest sub count -->
+        <li class="btn-group navbar-btn">
           <!-- Button for dropdown -->
           <button class="btn dropdown-toggle" data-toggle="dropdown">MY SUBREDDITS</button>
           <button class="btn dropdown-toggle" data-toggle="dropdown">
@@ -31,48 +35,67 @@
           <!-- Dropdown menu with subreddits --> 
           <ul class="dropdown-menu">
             <% if logged_in? %>
-              <% current_user.subreddits.limit(20).each do |subreddit| %>
+            <!-- List 20 of the current user's subscribed subbreddits -->
+              <% list_of_subreddits = current_user.subreddits.limit(20) %>
+              <% list_of_subreddits.each_with_index do |subreddit, index| %>
                 <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
-                <li role="separator" class="divider"></li>
+                <!-- Only display the separator if this is not the last item on the list of subreddits -->
+                <% if index != list_of_subreddits.length - 1 %>
+                  <li role="separator" class="divider"></li>
+                <% end %>
               <% end %>
+
+            <!-- Not logged in -->
             <% else %>
-              <% Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").each do |subreddit| %>
+            <!-- Find 20 subreddits which are public and order them by their subscriptions count -->
+              <% list_of_subreddits = Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(20) %>
+              <% list_of_subreddits.each_with_index do |subreddit, index| %>
                 <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
-                <li role="separator" class="divider"></li>
+                <!-- Only display the separator if this is not the last item on the list of subreddits -->
+                <% if index != list_of_subreddits.length - 1 %>
+                  <li role="separator" class="divider"></li>
+                <% end %>
               <% end %>
+
             <% end %>
           </ul>
-        </div>
-      </li>
 
-      <% Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").each do |subreddit| %>
-        <li class="col-sm-1"><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
+        </li> <!-- end of btn-group for MY SUBREDDITS BUTTON -->
+
+        <!-- Public Subreddits buttons -->
+        <% Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(10).each do |subreddit| %>
+          <li class="navbar-btn"><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
+        <% end %>
+
+      </ul> <!-- end of navbar-nav -->
+
+      <!-- If user is logged in, should logout and profile link, otherwise show signup/login button -->
+      <% if logged_in? %>
+        <ul class="navbar-right">
+          <button class="navbar-btn dropdown-toggle" data-toggle="dropdown"><h4><%= current_user.name %></h4></button>
+
+          <ul id="user-options" class="dropdown-menu">
+            <li><a href="/u/<%= current_user.name %>"><button>Profile</button></a></li>
+            <li><a href="/r/subreddits/new"><button>New Subreddit</button></a></li>
+            <li><a href="/posts/new"><button>New Post</button></a></li>
+            <li><form method="post" action="/logout">
+              <input type="submit" value="Log Out">
+            </form></li>
+          </ul>
+        </ul>
+      <% else %>
+       <ul class="toggle-ua-form navbar-right"><li class="btn navbar-btn">Sign up / Login</li></ul>
       <% end %>
-    </ul>
+
+    </div> <!-- end of fluid container -->
   </nav>
 
+  <!-- Main content -->
   <div class="container">
 
-
-    <!-- Messages when the user signups, logins, and logouts (successful or unsuccessful) -->
+    <!-- Messages when the user signups, logins, logouts (successful or unsuccessful) or errors with editing/creating -->
     <% unless locals.empty? %>
       <%= message %>
-    <% end %>
-
-    <!-- If user is logged in, should logout and profile link, otherwise show signup/login button -->
-    <% if logged_in? %>
-      <div id="user-options">
-        <h4><%= current_user.name %></h4>
-        <a href="/u/<%= current_user.name %>"><button>Profile</button></a>
-        <a href="/r/subreddits/new"><button>New Subreddit</button></a>
-        <a href="/posts/new"><button>New Post</button></a>
-        <form method="post" action="/logout">
-          <input type="submit" value="Log Out">
-        </form>
-      </div>
-
-    <% else %>
-     <button class="toggle-ua-form">Sign up / Login</button>
     <% end %>
 
     <!-- User Authentication form - signups and logins -->
@@ -83,7 +106,7 @@
 
     <br><br>
 
-    <!-- Template -->
+    <!-- Main Content gets rendered -->
     <%= yield %>
 
   </div> <!-- .container  -->

@@ -24,6 +24,10 @@ nav {
   height: 50px;
 }
 
-div.btn-group button {
-  height: 35px;  
+.navbar .btn, .navbar-btn a {
+  height: 35px;
+}
+
+li.navbar-btn a {
+  padding: 6px 12px;
 }

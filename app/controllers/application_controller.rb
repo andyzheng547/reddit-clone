@@ -20,6 +20,12 @@ class ApplicationController < Sinatra::Base
     redirect "/pg/1"
   end
 
+  get '/test' do
+    session.clear
+    @current_user = nil
+    "Session current_user cleared: #{current_user.name}"
+  end
+
   # Index shows up to 25 posts a page. The smaller the page number the more current the post entries are.
   get '/pg/:page_num' do
     @posts, max_pages = get_posts(params[:page_num].to_i)
