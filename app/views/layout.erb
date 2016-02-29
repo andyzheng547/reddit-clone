@@ -2,6 +2,8 @@
 <head>
   <title>Reddit clone - The failed experiment they never deployed</title>
 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <!-- Stylesheets -->
   <link href="<%= url('/css/bootstrap.min.css') %>" rel="stylesheet" type="text/css" />
   <link href="<%= url('/css/style.css') %>" rel="stylesheet" type="text/css" />
@@ -17,81 +19,99 @@
   <!-- Navbar -->
   <nav class="navbar navbar-default bg-faded">
     <div class="container-fluid">
+    <div class="row">
 
-      <div class="navbar-header">
-        <a class="navbar-brand btn" href="/">FRONT</a>
+      <!-- Hamburger Menu -->
+      <div class="navbar-header pull-left">
+        <button class="navbar-toggle collapsed" data-toggle="collapse" data-target=" #navbar-subreddits">
+          <span class="sr-only">Toggle subreddit links</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
       </div>
 
-      <ul class="nav navbar-nav btn-group">
+      <!-- Subreddit links navbar -->
+      <div class="collapse navbar-collapse col-md-11" id="navbar-subreddits">
+        <ul class="nav navbar-nav btn-group">
 
-        <!-- MY SUBREDDITS BUTTON - shows users subreddits or public subreddits with highest sub count -->
-        <li class="btn-group navbar-btn">
-          <!-- Button for dropdown -->
-          <button class="btn dropdown-toggle" data-toggle="dropdown">MY SUBREDDITS</button>
-          <button class="btn dropdown-toggle" data-toggle="dropdown">
-            <span class="caret"></span>
-          </button>
+          <li><a class="navbar-brand btn" href="/">FRONT</a></li>
 
-          <!-- Dropdown menu with subreddits --> 
-          <ul class="dropdown-menu">
-            <% if logged_in? %>
-            <!-- List 20 of the current user's subscribed subbreddits -->
-              <% list_of_subreddits = current_user.subreddits.limit(20) %>
-              <% list_of_subreddits.each_with_index do |subreddit, index| %>
-                <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
-                <!-- Only display the separator if this is not the last item on the list of subreddits -->
-                <% if index != list_of_subreddits.length - 1 %>
+          <!-- MY SUBREDDITS BUTTON - shows users subreddits or public subreddits with highest sub count -->
+          <li class="btn-group navbar-btn">
+            <!-- Button for dropdown -->
+            <button class="btn dropdown-toggle" data-toggle="dropdown">MY SUBREDDITS</button>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+              <span class="caret"></span>
+            </button>
+
+            <!-- Dropdown menu with subreddits --> 
+            <ul class="dropdown-menu">
+              <% if logged_in? %>
+              <!-- List 20 of the current user's subscribed subbreddits -->
+                <% list_of_subreddits = current_user.subreddits.limit(20) %>
+                <% list_of_subreddits.each do |subreddit| %>
+                  <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
+                  <li role="separator" class="divider"></li>
+                <% end %>
+              <!-- Not logged in -->
+              <% else %>
+              <!-- Find 20 subreddits which are public and order them by their subscriptions count -->
+                <% list_of_subreddits = Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(20) %>
+                <% list_of_subreddits.each do |subreddit| %>
+                  <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
                   <li role="separator" class="divider"></li>
                 <% end %>
               <% end %>
+              <li class="all-subreddits-btn"><a href="/subreddits">ALL SUBREDDITS</a></li>
+            </ul>
 
-            <!-- Not logged in -->
-            <% else %>
-            <!-- Find 20 subreddits which are public and order them by their subscriptions count -->
-              <% list_of_subreddits = Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(20) %>
-              <% list_of_subreddits.each_with_index do |subreddit, index| %>
-                <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
-                <!-- Only display the separator if this is not the last item on the list of subreddits -->
-                <% if index != list_of_subreddits.length - 1 %>
-                  <li role="separator" class="divider"></li>
-                <% end %>
-              <% end %>
+          </li> <!-- end of btn-group for MY SUBREDDITS BUTTON -->
 
-            <% end %>
-          </ul>
+          <!-- Public Subreddits buttons -->
+          <% Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(10).each do |subreddit| %>
+            <li class="navbar-btn"><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
+          <% end %>
 
-        </li> <!-- end of btn-group for MY SUBREDDITS BUTTON -->
+        </ul> <!-- End of navbar-nav -->
+      </div> <!-- End of Subreddit links -->
 
-        <!-- Public Subreddits buttons -->
-        <% Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(10).each do |subreddit| %>
-          <li class="navbar-btn"><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
-        <% end %>
 
-      </ul> <!-- end of navbar-nav -->
-
-      <!-- If user is logged in, should logout and profile link, otherwise show signup/login button -->
+      <!-- Navbar on right - User authentication, links to create new posts/subreddits, profile -->
       <% if logged_in? %>
-        <ul class="navbar-right">
-          <button class="navbar-btn dropdown-toggle" data-toggle="dropdown"><h4><%= current_user.name %></h4></button>
+        <ul class="pull-right col-md-1">
+          <li class="navbar-btn dropdown-toggle username-btn" data-toggle="dropdown"><h4><%= current_user.name %></h4></li>
 
-          <ul id="user-options" class="dropdown-menu">
-            <li><a href="/u/<%= current_user.name %>"><button>Profile</button></a></li>
-            <li><a href="/r/subreddits/new"><button>New Subreddit</button></a></li>
-            <li><a href="/posts/new"><button>New Post</button></a></li>
-            <li><form method="post" action="/logout">
-              <input type="submit" value="Log Out">
-            </form></li>
+          <ul id="user-menu" class="dropdown-menu">
+            <li>
+              <a href="/u/<%= current_user.name %>">Profile</a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li>
+              <a href="/r/subreddits/new">New Subreddit</a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li>
+              <a href="/posts/new">New Post</a>
+            </li>
+            <li role="separator" class="divider"></li>
+            <li id="logout-btn">
+              <form method="post" action="/logout">
+                <input type="submit" value="Log Out">
+              </form>
+            </li>
           </ul>
         </ul>
       <% else %>
-       <ul class="toggle-ua-form navbar-right"><li class="btn navbar-btn">Sign up / Login</li></ul>
-      <% end %>
+       <ul class="toggle-ua-form pull-right col-md-1"><li class="btn navbar-btn">Sign up / Login</li></ul>
+      <% end %> <!-- End of right navbar -->
 
+    </div> <!-- end of row -->
     </div> <!-- end of fluid container -->
   </nav>
 
   <!-- Main content -->
-  <div class="container">
+  <div class="container" id="sb-site">
 
     <!-- Messages when the user signups, logins, logouts (successful or unsuccessful) or errors with editing/creating -->
     <% unless locals.empty? %>
@@ -120,6 +140,8 @@
     $(".toggle-ua-form").click(function(){
       $( "#ua-form").toggle();
     });
+
+
   </script>
 
 </body> 

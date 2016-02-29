@@ -6,13 +6,13 @@
         <% subreddit = Subreddit.find(post.subreddit_id) %>
         <h5><a href="<%= post.link %>"><%= post.title %></a> (<%= post.link_host %>)</h5>
         <p>submited by <a href="/u/<%= post.user.name %>"><%= post.user.name %></a> to <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">/r/<%= subreddit.name %></a></p>
-        <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments"><button>Comments</button></a>
+        <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">Comments</a>
         <br><br>
       <% else %>
         <% subreddit = Subreddit.find(post.subreddit_id) %>
         <h5><a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a></h5>
         <p>submited by <a href="/u/<%= post.user.name %>"><%= post.user.name %></a> to <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">/r/<%= subreddit.name %></a></p>
-        <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments"><button>Comments</button></a>
+        <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">Comments</a>
         <br><br>
       <% end %>
 

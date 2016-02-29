@@ -1,18 +1,23 @@
-<% if @subreddit.is_private == false || 
-  (@subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
+<div class="row">
+  <!-- Subreddit info on right side of screen -->
+  <div class="subreddit-info col-md-2">
+    <%= erb :"subreddits/subreddit_info" %>
+  </div>
 
-  <%= erb :"posts/display_posts" %>
+  <div class="posts col-md-10 col-sm-12">
+    <% if @subreddit.is_private == false || 
+      (@subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
 
-<% else %>
-  <h1>Sorry, but you need to be subscribed to view this subreddit.</h1>
+      <%= erb :"posts/display_posts" %>
 
-  <!-- If they already had a subscription request. -->
-  <% if subscription =  Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id) %>
-    <p>Your subscription: <%= subscription.access %></p>
-  <% end %>
-<% end %>
+    <% else %>
+      <h1>Sorry, but you need to be subscribed to view this subreddit.</h1>
 
-<!-- Subreddit info on right side of screen -->
-<div class="subreddit-info">
-  <%= erb :"subreddits/subreddit_info" %>
+      <!-- If they already had a subscription request. -->
+      <% if subscription =  Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id) %>
+        <p>Your subscription: <%= subscription.access %></p>
+      <% end %>
+    <% end %>
+  </div>
+
 </div>

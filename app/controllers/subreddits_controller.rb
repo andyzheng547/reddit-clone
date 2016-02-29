@@ -2,6 +2,10 @@
 
 class SubredditsController < ApplicationController
 
+  get '/subreddits' do
+    erb :"subreddits/all_subreddits"
+  end
+
   get '/r/:subreddit_slug' do
     redirect "/r/#{params[:subreddit_slug]}/pg/1"
   end
@@ -18,7 +22,7 @@ class SubredditsController < ApplicationController
   end
 
   get '/r/subreddits/new' do
-    if logged_in?(session)
+    if logged_in?
       erb :"subreddits/new"
     else
       erb :index, locals: {message: "You need to be logged in to create a new subreddit."}
