@@ -70,11 +70,16 @@ input[type=submit] {
 }
 
 /* @media queries */
-@media (max-width: 768px) {
+@media screen and (max-width: 768px) {
   .subreddit-info {
     display: none;
   }
+  #navbar-subreddits {
+    background-color: black;
+  }
+  #navbar-subreddits li {
+    display: inline-block;
+  }
 }
-
 
 
