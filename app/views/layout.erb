@@ -33,8 +33,8 @@
 
       <!-- Navbar on right - User authentication, links to create new posts/subreddits, profile -->
       <% if logged_in? %>
-        <ul class="pull-right col-md-1 col-sm-12">
-          <li class="navbar-btn dropdown-toggle username-btn" data-toggle="dropdown"><h4><%= current_user.name %></h4></li>
+        <ul class="pull-right col-xs-3">
+          <li class="navbar-btn dropdown-toggle username-btn pull-right " data-toggle="dropdown"><h4><%= current_user.name %></h4></li>
 
           <ul id="user-menu" class="dropdown-menu">
             <li>
@@ -133,21 +133,30 @@
   <!-- Javascript for toggling ua-form -->
   <script type="text/javascript">
     $(function(){
+      // Hide user authentication form
       $("#ua-form").hide();
+
+      // Add col-xs-12 to navbar list items based on window size
+      var viewportWidth = $(window).width();
+      if (viewportWidth < 768) {
+        $("#navbar-subreddits li").addClass("col-xs-12");
+      }
+
     });
 
     $(".toggle-ua-form").click(function(){
       $( "#ua-form").toggle();
     });
 
+    // 
     $(window).resize(function () {
-        var viewportWidth = $(window).width();
-        if (viewportWidth < 768) {
-          $("#navbar-subreddits li").addClass("col-xs-12");
-        }
-        if (viewportWidth > 768) {
-          $("#navbar-subreddits li").removeClass("col-xs-12");
-        }
+      var viewportWidth = $(window).width();
+      if (viewportWidth < 768) {
+        $("#navbar-subreddits li").addClass("col-xs-12");
+      }
+      if (viewportWidth >= 768) {
+        $("#navbar-subreddits li").removeClass("col-xs-12");
+      }
     });
 
   </script>
