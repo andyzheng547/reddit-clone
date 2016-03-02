@@ -7,11 +7,11 @@
   <a href="/r/<%= subreddit.slug %>">/r/<%= subreddit.name %></a>
 
   <!-- Unsubscribe -->
-  <form method="post" action="/r/<%= subreddit.slug %>/unsubscribe">
+  <form class="remove-form-container-style" method="post" action="/r/<%= subreddit.slug %>/unsubscribe">
     <input type="hidden" name="subreddit_id" value="<%= subreddit.id %>">
     <input type="submit" value="Unsubscribe">
   </form>
-  <br>
+  <hr>
 
 <% end %>
 </ul>

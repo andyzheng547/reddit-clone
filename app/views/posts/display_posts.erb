@@ -6,12 +6,12 @@
         <% subreddit = Subreddit.find(post.subreddit_id) %>
         <div class="row">
           <!-- Post # -->
-          <div class="col-xs-1 post-number">
+          <div class="col-xs-1 post-index">
             <p><%= index %></p>
           </div>
 
           <!-- Post -->
-          <div class="col-xs-11 post-info">
+          <div class="col-xs-10 light-gray-background">
             <h5>
               <a href="<%= post.link %>"><%= post.title %></a> (<%= post.link_host %>)
             </h5>
@@ -24,17 +24,17 @@
             </p>
           </div>
         </div>
-        <br><br>
+        <br>
       <% else %>
         <% subreddit = Subreddit.find(post.subreddit_id) %>
         <div class="row">
           <!-- Post # -->
-          <div class="col-xs-1 post-number">
+          <div class="col-xs-1 post-index">
             <p><%= index %></p>
           </div>
 
           <!-- Post -->
-          <div class="col-xs-11 post-info">
+          <div class="col-xs-10 light-gray-background">
             <h5>
               <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a>
             </h5>
@@ -47,7 +47,7 @@
             </p>
           </div>
         </div>
-        <br><br>
+        <br>
       <% end %>
 
     <% end %>

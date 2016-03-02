@@ -2,34 +2,30 @@
 <hr>
 
 <form method="post" action="/posts/new">
-  <label for="post_type_id">Submit a link / text post</label>
-  <div class="radio-inputs row">
-    <label for="1" class="col-xs-2">
-      <input type="radio" name="post_type_id" value="1"> Link
-    </label>
-    <label for="2" class="col-xs-2">
-      <input type="radio" name="post_type_id" value="2" checked> Text
-    </label>
-  </div>
-
   <div class="row">
-    <label class="col-xs-1">Title: </label>
-    <input class="col-xs-11" type="text" name="title" placeholder="title">
+    <label for="post_type_id" class="col-xs-2">Submit a link /<br> text post</label>
+    <input type="radio" name="post_type_id" value="1"> <strong>Link</strong>
+    <input type="radio" name="post_type_id" value="2" checked> <strong>Text</strong>
   </div><br>
 
   <div class="row">
-    <label class="col-xs-1">Link: </label>
-    <input class="col-xs-11" type="url" name="link" placeholder="link">
+    <label class="col-xs-2">Title: </label>
+    <input class="col-xs-8" type="text" name="title" placeholder="title">
   </div><br>
 
   <div class="row">
-    <label class="col-xs-1">Content: </label><br>
-    <textarea class="col-xs-11" name="content" placeholder="content"></textarea><br>
+    <label class="col-xs-2">Link: </label>
+    <input class="col-xs-8" type="url" name="link" placeholder="link">
   </div><br>
 
   <div class="row">
-    <label class="col-xs-1">Post to: </label>
-    <input class="col-xs-2" list="subreddits" name="subreddit_name">
+    <label class="col-xs-2">Content: </label>
+    <textarea class="col-xs-8" name="content" placeholder="content"></textarea><br>
+  </div><br>
+
+  <div class="row">
+    <label class="col-xs-2">Post to: </label>
+    <input class="col-xs-3" list="subreddits" name="subreddit_name">
     <datalist id="subreddits">
       <% Subreddit.all.each do |subreddit| %>
         <option value="<%= subreddit.name %>">
@@ -38,6 +34,6 @@
   </div>
 
   <br>
-  <input type="submit" value="Submit New Post">
+  <input type="submit" value="Submit New Post" class="big-submit-btn">
 
 </form>

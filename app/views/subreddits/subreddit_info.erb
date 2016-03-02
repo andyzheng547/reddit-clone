@@ -1,14 +1,14 @@
 <% if logged_in? %>
   <% if subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id) %>
 
-    <form method="post" action="/r/<%= @subreddit.slug %>/unsubscribe">
+    <form class="remove-form-container-style" method="post" action="/r/<%= @subreddit.slug %>/unsubscribe">
       <input type="hidden" name="subreddit_id" value="<%= @subreddit.id %>">
       <input type="submit" value="Unsubscribe">
     </form>
 
   <% else %>
 
-    <form method="post" action="/r/<%= @subreddit.slug %>/subscribe">
+    <form class="remove-form-container-style" method="post" action="/r/<%= @subreddit.slug %>/subscribe">
       <input type="submit" value="Subscribe">
     </form>
 

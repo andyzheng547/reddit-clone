@@ -1,18 +1,15 @@
 <h1>/u/<%= @user.name %> profile</h1>
 
 <!-- Edit Profile link -->
-<a href="/u/<%= @user.name %>/edit">
+<a href="/u/<%= @user.name %>/edit" class="no-wrap">
   <button>Edit Profile</button>
 </a>
-<br><br>
-
 <!-- Edit Profile link -->
-<a href="/u/<%= @user.name %>/delete">
+<a href="/u/<%= @user.name %>/delete" class="no-wrap">
   <button>Delete Profile</button>
 </a>
-<br><br>
 
-
+<hr><br>
 <!-- Buttons to toggle show/hide -->
 <div class="btn-group btn-group-lg" role="group" aria-label="user_navigation">
   <button type="button" class="btn btn-secondary show-btn" target="comments">Comments</button>

@@ -1,7 +1,15 @@
 <h3>Posts</h3>
+<hr>
 
 <ul>
-  <% @user.posts.each.with_index(1) do |post, index| %>
-    <%= index %> <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title  %></a> posted to /r/<a href="/r/<%= post.subreddit.slug %>"><%= post.subreddit.name %></a>
-  <% end %>
+<% @user.posts.each.with_index(1) do |post, index| %>
+  <div class="row">
+    <div class="col-xs-1 post-index">
+      <p><%= index %></p>
+    </div>
+    <div class="col-xs-11 light-gray-background">
+      <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title  %></a> posted to /r/<a href="/r/<%= post.subreddit.slug %>"><%= post.subreddit.name %></a>
+    </div>
+  </div>
+<% end %>
 </ul>

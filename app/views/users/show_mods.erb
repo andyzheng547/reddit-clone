@@ -1,8 +1,7 @@
 <h3>Moderator of: </h3>
-
+<hr>
 <ul>
   <% @user.moderators.each do |mod| %>
-    <br>
     <h5><a href="/r/<%= mod.subreddit.slug %>">/r/<%= mod.subreddit.name %></a></h5>
     <a href="/r/<%= mod.subreddit.slug %>/add_mod"><button>Add a mod</button></a>
     <a href="/r/<%= mod.subreddit.slug %>/edit"><button>Edit subreddit</button></a>
@@ -16,6 +15,6 @@
         <% end %>
       <% end %>
     </ul>
-
+    <hr>
   <% end %>
 </ul>

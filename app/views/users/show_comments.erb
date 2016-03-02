@@ -1,19 +1,33 @@
 <h3>Comments</h3>
-<br>
+<hr>
 
 <ul>
   <% @user.comments.each.with_index(1) do |comment, index| %>
 
-    <% post = Post.find(comment.post_id) %>
-    <% if post.post_type_id == "1" %>
-      <%= index %> <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a> (<%= post.link_host %>)
-      <p>submitted to <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a></p>
-      <ul><p><%= comment.content %></p></ul>
-    <% else %>
-      <%= index %> <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a>
-      <p>submitted to <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a></p>
-      <ul><p><%= comment.content %></p></ul>
-    <% end %>
+    <div class="row">
+      <% post = comment.post %>
+      <% if post.post_type_id == "1" %>
+        <div class="col-xs-1 post-index">
+          <p><%= index %></p>
+        </div>
+        <div class="col-xs-11 light-gray-background">
+          <p>
+            <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a> (<%= post.link_host %>) by <a href="/u/<%= post.user.name %>"><%= post.user.name %></a> in <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a>
+          </p>
+          <p class="pre-wrap">    <%= comment.content %></p>
+        </div>
+      <% else %>
+        <div class="col-xs-1 post-index">
+          <p><%= index %></p>
+        </div>
+        <div class="col-xs-11 light-gray-background">
+          <p>
+            <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a> by <a href="/u/<%= post.user.name %>"><%= post.user.name %></a> in <a href="/r/<%= post.subreddit.slug %>">/r/<%= post.subreddit.name %></a>
+          </p>
+          <p class="pre-wrap">    <%= comment.content %></p>
+        </div>
+      <% end %>
+    </div><br>
 
   <% end %>
 </ul>

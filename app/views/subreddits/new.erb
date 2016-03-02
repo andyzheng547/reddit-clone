@@ -1,14 +1,23 @@
 <h1>Create a new subreddit</h1>
 
 <form method="post" action="/r/subreddits/new">
-  Name: <input type="text" name="name" placeholder="subreddit name"><br>
+  <div class="row">
+    <label for="name" class="col-xs-2">Name: </label>
+    <input type="text" name="name" placeholder="subreddit name" class="col-xs-9">
+  </div><br>
 
-  Description: <textarea name="description" placeholder="description"></textarea><br>
+  <div class="row">
+    <label for="description" class="col-xs-2">Description: </label>
+    <textarea name="description" placeholder="description" class="col-xs-9"></textarea>
+  </div><br>
 
-  Set to Private: <br>
-  <input type="radio" name="is_private" value="true"> Yes <br>
-  <input type="radio" name="is_private" value="false" checked> No <br>
+  <div class="row">
+    <label for="is_private" class="col-xs-2">Set to Private: </label>
+    <input type="radio" name="is_private" value="true"> <strong>Yes</strong>
+    <input type="radio" name="is_private" value="false" checked> <strong>No</strong>
+  </div>
 
-  <input type="submit" value="Create New Subreddit">
+  <br>
+  <input type="submit" value="Create New Subreddit" class="big-submit-btn">
 
 </form>

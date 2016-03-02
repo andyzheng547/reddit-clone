@@ -50,7 +50,7 @@
             </li>
             <li role="separator" class="divider"></li>
             <li id="logout-btn">
-              <form method="post" action="/logout">
+              <form class="remove-form-container-style" method="post" action="/logout">
                 <input type="submit" value="Log Out">
               </form>
             </li>
@@ -58,7 +58,7 @@
         </ul>
       <% else %>
         <ul class="toggle-ua-form pull-right col-md-1 col-sm-12">
-          <li class="btn navbar-btn">Sign up / Login</li>
+          <li id="ua-button" class="btn navbar-btn">signup / login</li>
         </ul>
       <% end %> <!-- End of right navbar -->
 
@@ -66,7 +66,7 @@
       <div class="collapse navbar-collapse col-md-11 col-sm-12" id="navbar-subreddits">
         <ul class="nav navbar-nav row">
 
-          <li class="btn">
+          <li class="navbar-btn">
             <a href="/">FRONT</a>
           </li>
 
@@ -86,7 +86,7 @@
               <!-- List 20 of the current user's subscribed subbreddits -->
                 <% list_of_subreddits = current_user.subreddits.limit(20) %>
                 <% list_of_subreddits.each do |subreddit| %>
-                  <li class=""><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
+                  <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
                   <li role="separator" class="divider"></li>
                 <% end %>
               <!-- Not logged in -->
@@ -94,7 +94,7 @@
               <!-- Find 20 subreddits which are public and order them by their subscriptions count -->
                 <% list_of_subreddits = Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(20) %>
                 <% list_of_subreddits.each do |subreddit| %>
-                  <li class=""><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
+                  <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
                   <li role="separator" class="divider"></li>
                 <% end %>
               <% end %>
