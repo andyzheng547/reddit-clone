@@ -7,23 +7,27 @@
   <div class="posts col-md-10 col-sm-12">
     <!-- Comments if subreddit is not private or if the user's subscription has access equal to true -->
     <% if @subreddit.is_private == false || 
-      (@subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
+      (!!@user && @subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
 
       <% if @post.post_type_id == 1 %>
-        <div class="row">
-          <p class="col-xs-12"><a href="<%= @post.link %>"><%= @post.title %></a> (<%= @post.link_host %>)</p>
+        <div class="col-xs-12 light-gray-background">
+          <h5><a href="<%= @post.link %>"><%= @post.title %></a> (<%= @post.link_host %>)</h5>
+          submitted by <a href="/u/<%= @post.user.name %>"><%= @post.user.name%></a>
         </div>
+        <hr>
 
       <% else %>
         <div class="row">
-          <p class="col-xs-12"><a href="<%= @post.link %>"><%= @post.title %></a></p>
-        </div>
-        <div class="row">
+          <div class="col-xs-12">
+            <h5><a href="<%= @post.link %>"><%= @post.title %></a> (self.<%= @subreddit.name %>)</h5>
+
+            submitted by <a href="/u/<%= @post.user.name %>"><%= @post.user.name%></a>
+          </div>
+        </div><br>
+        <div class="row light-gray-background">
           <p class="col-xs-12"><%= @post.content %></p>
         </div>
       <% end %>
-
-        <hr>
 
         <!-- Add a new comment -->
         <% if logged_in? %>
@@ -37,6 +41,7 @@
             </form>
         <% end %>
 
+        <br><br>
         <h4>Comments</h4>
         <hr>
         <!-- Display comments -->

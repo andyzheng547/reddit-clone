@@ -1,6 +1,9 @@
 .toggle-ua-form, .subreddit-info {
   float: right;
 }
+.subreddit-info {
+  word-wrap: break-word;
+}
 
 body {
   background-color: rgba(206, 227, 248, .8 );
@@ -10,6 +13,20 @@ body {
   background-color: white;
   min-height: 100%;
   padding: 0 2em;
+  border-radius: 0.3em;
+}
+
+nav.navbar:after {
+    content: ".";
+    display: block;
+    clear: both;
+    visibility: hidden;
+    line-height: 0;
+    height: 0;
+}
+
+ul {
+  padding-left: 1.5em;
 }
 
 .no-wrap {
@@ -18,10 +35,6 @@ body {
 
 .pre-wrap {
   white-space: pre-wrap;
-}
-
-.inline {
-  display: inline;
 }
 
 /* Navbar styles */
@@ -34,8 +47,8 @@ li {
 }
 
 nav {
-  height: 50px;
   z-index: 1;
+  opacity: 0.95;
 }
 
 .navbar li.navbar-btn {
@@ -63,12 +76,14 @@ li.all-subreddits-btn a {
 
 .dropdown-menu {
   border-radius: 0.3em;
+  opacity: 0.85;
 }
 
 /* Username button */
 .username-btn {
   font-size: 1.5em;
   padding: 0px 10px;
+  color: rgb(200, 200, 200);
 }
 
 /* Logout button */
@@ -80,22 +95,6 @@ li.all-subreddits-btn a {
   background-color: rgb(192, 192, 192);
   border-radius: 0.5em;
   border: 1px solid black;
-}
-
-/* @media queries */
-@media screen and (max-width: 767px) {
-  .subreddit-info {
-    display: none;
-  }
-  #navbar-subreddits {
-    background-color: black;
-  }
-  #navbar-subreddits li {
-    display: inline-block;
-  }
-  div#navbar-subreddits li.btn-group button {
-    margin-bottom: .5em;
-  }
 }
 
 /* Forms */
@@ -145,7 +144,7 @@ input.big-submit-btn {
   width: 13em;
 }
 
-/* Post styles */
+/* Content styles */
 .light-gray-background {
   border: 1px solid rgb(207, 207, 207);
   border-radius: 0.3em;
@@ -158,4 +157,21 @@ input.big-submit-btn {
 }
 .post-index p {
   margin: 0 auto;
+}
+
+/* @media queries */
+@media screen and (max-width: 767px) {
+  .subreddit-info {
+    display: none;
+  }
+  #navbar-subreddits {
+    background-color: rgba(0,0,0, 0.85);
+    border-radius: 0.3em;
+  }
+  #navbar-subreddits li {
+    display: inline-block;
+  }
+  div#navbar-subreddits li.btn-group button {
+    margin-bottom: .5em;
+  }
 }

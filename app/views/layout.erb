@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>Reddit clone - The failed experiment they never deployed</title>
+  <title>False reddit is best reddit</title>
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
@@ -17,7 +17,7 @@
 <body ng-app>
 
   <!-- Navbar -->
-  <nav class="navbar navbar-default bg-faded">
+  <nav class="navbar navbar-inverse bg-faded">
     <div class="container-fluid">
     <div class="row">
 
@@ -33,7 +33,7 @@
 
       <!-- Navbar on right - User authentication, links to create new posts/subreddits, profile -->
       <% if logged_in? %>
-        <ul class="pull-right col-xs-3">
+        <ul class="pull-right col-xs-1">
           <li class="navbar-btn dropdown-toggle username-btn pull-right " data-toggle="dropdown"><h4><%= current_user.name %></h4></li>
 
           <ul id="user-menu" class="dropdown-menu">
@@ -57,7 +57,7 @@
           </ul>
         </ul>
       <% else %>
-        <ul class="toggle-ua-form pull-right col-md-1 col-sm-12">
+        <ul class="toggle-ua-form pull-right col-xs-1">
           <li id="ua-button" class="btn navbar-btn">signup / login</li>
         </ul>
       <% end %> <!-- End of right navbar -->
@@ -104,7 +104,7 @@
           </li> <!-- end of btn-group for MY SUBREDDITS BUTTON -->
 
           <!-- Public Subreddits buttons -->
-          <% Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(10).each do |subreddit| %>
+          <% Subreddit.all.joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(15).each do |subreddit| %>
             <li class="navbar-btn"><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
           <% end %>
 

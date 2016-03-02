@@ -1,29 +1,31 @@
-<% if logged_in? %>
-  <% if subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id) %>
+<div class="light-gray-background">
+  <% if logged_in? %>
+    <% if subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id) %>
 
-    <form class="remove-form-container-style" method="post" action="/r/<%= @subreddit.slug %>/unsubscribe">
-      <input type="hidden" name="subreddit_id" value="<%= @subreddit.id %>">
-      <input type="submit" value="Unsubscribe">
-    </form>
+      <form class="remove-form-container-style" method="post" action="/r/<%= @subreddit.slug %>/unsubscribe">
+        <input type="hidden" name="subreddit_id" value="<%= @subreddit.id %>">
+        <input type="submit" value="Unsubscribe">
+      </form>
 
-  <% else %>
+    <% else %>
 
-    <form class="remove-form-container-style" method="post" action="/r/<%= @subreddit.slug %>/subscribe">
-      <input type="submit" value="Subscribe">
-    </form>
+      <form class="remove-form-container-style" method="post" action="/r/<%= @subreddit.slug %>/subscribe">
+        <input type="submit" value="Subscribe">
+      </form>
+
+    <% end %>
+  <% end %>
+  <br>
+
+  <h4><a href="/r/<%= @subreddit.slug %>">/r/<%= @subreddit.name %></a></h4>
+  <br>
+  <h5>Description</h5>
+  <p><%= @subreddit.description %></p>
+
+  <h5>Moderators</h5>
+  <% @subreddit.moderators.each do |mod| %>
+
+    <p><%= User.find(mod.user_id).name %></p>
 
   <% end %>
-<% end %>
-<br>
-
-<h4><a href="/r/<%= @subreddit.slug %>">/r/<%= @subreddit.name %></a></h4>
-<br>
-<h5>Description</h5>
-<p><%= @subreddit.description %></p>
-
-<h5>Moderators</h5>
-<% @subreddit.moderators.each do |mod| %>
-
-  <p><%= User.find(mod.user_id).name %></p>
-
-<% end %>
+</div>

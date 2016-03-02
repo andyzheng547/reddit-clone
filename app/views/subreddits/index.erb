@@ -6,7 +6,7 @@
 
   <div class="posts col-md-10 col-sm-12">
     <% if @subreddit.is_private == false || 
-      (@subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
+      (!!@user && @subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
 
       <%= erb :"posts/display_posts" %>
 
@@ -14,7 +14,7 @@
       <h1>Sorry, but you need to be subscribed to view this subreddit.</h1>
 
       <!-- If they already had a subscription request. -->
-      <% if subscription =  Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id) %>
+      <% if !!@user && subscription =  Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id) %>
         <p>Your subscription: <%= subscription.access %></p>
       <% end %>
     <% end %>
