@@ -10,28 +10,35 @@
       (@subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
 
       <% if @post.post_type_id == 1 %>
-        <h3><a href="<%= @post.link %>"><%= @post.title %></a></h3>
-        <p>(<%= @post.link_host %>)</p>
+        <div class="row">
+          <p class="col-xs-12"><a href="<%= @post.link %>"><%= @post.title %></a> (<%= @post.link_host %>)</p>
+        </div>
 
       <% else %>
-        <h3><a href="<%= @post.link %>"><%= @post.title %></a></h3>
-        <p><%= @post.content %></p>
+        <div class="row">
+          <p class="col-xs-12"><a href="<%= @post.link %>"><%= @post.title %></a></p>
+        </div>
+        <div class="row">
+          <p class="col-xs-12"><%= @post.content %></p>
+        </div>
       <% end %>
 
-        <br><br>
+        <hr>
 
         <!-- Add a new comment -->
         <% if logged_in? %>
             <button ng-init="show_comment_form = false"  ng-click="show_comment_form = !show_comment_form">New Comment</button>
-            <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_comment" ng-show="show_comment_form">
-              <textarea name="content" placeholder="comment"></textarea>
+            <br><br>
+            <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_comment" ng-show="show_comment_form" class="row">
+              <textarea name="content" placeholder="comment" class="col-xs-11"></textarea>
+
               <input type="hidden" name="post_id" value="<%= @post.id %>">
               <input type="submit" value="Comment">
             </form>
         <% end %>
 
         <h4>Comments</h4>
-
+        <hr>
         <!-- Display comments -->
         <% @comments.each do |comment| %>
 
@@ -45,9 +52,12 @@
               <!-- Add reply to comment -->
               <% if logged_in? %>
                 <button ng-init="show_reply_form_<%= comment.id %> = false"  ng-click="show_reply_form_<%= comment.id %> = !show_reply_form_<%= comment.id %>">Reply</button>
-                <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= comment.id %>">
-                  <textarea name="content" placeholder="reply"></textarea>
+                <br><br>
+                <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= comment.id %>" class="row">
+                  <textarea name="content" placeholder="reply" class="col-xs-11"></textarea>
                   <input type="hidden" name="parent_id" value="<%= comment.id %>">
+
+                  <br>
                   <input type="submit" value="Reply">
                 </form>
               <% end %>

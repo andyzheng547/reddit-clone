@@ -9,6 +9,7 @@ body {
 .container {
   background-color: white;
   min-height: 100%;
+  padding: 0 3em;
 }
 
 .nowrap {
@@ -63,11 +64,6 @@ li.all-subreddits-btn a {
   padding: 0 20px;
   margin: 0 auto;
 }
-input[type=submit] {
-  width: 140px;
-  background-color: rgb(192, 192, 192);
-  border-radius: 1em; 
-}
 
 /* @media queries */
 @media screen and (max-width: 767px) {
@@ -82,6 +78,19 @@ input[type=submit] {
   }
 }
 
-
-
-
+/* Forms */
+.radio-inputs * {
+  white-space: pre-wrap;
+}
+textarea {
+  height: 5em;
+}
+input, textarea, button {
+  border-radius: 0.3em;
+}
+input[type=submit] {
+  width: 140px;
+  background-color: rgb(192, 192, 192);
+  border-radius: 1em;
+  margin-top: 0.5em;
+}

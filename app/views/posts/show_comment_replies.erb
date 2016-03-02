@@ -7,11 +7,14 @@
     <!-- Add reply to reply -->
     <% if logged_in? %>
       <button ng-init="show_reply_form_<%= reply.id %> = false"  ng-click="show_reply_form_<%= reply.id %>  = !show_reply_form_<%= reply.id %> ">Reply</button>
-      <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= reply.id %> ">
-        <textarea name="content" placeholder="reply"></textarea>
+      <br><br>
+      <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= reply.id %>" class="row">
+        <textarea name="content" placeholder="reply" class="col-xs-11"></textarea>
         <input type="hidden" name="parent_id" value="<%= reply.id %>">
         <input type="hidden" name="post_id" value="<%= @post.id %>">
+        <br>
         <input type="submit" value="Reply">
+        <br>
       </form>
     <% end %>
 

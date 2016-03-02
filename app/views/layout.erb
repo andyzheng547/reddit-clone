@@ -57,19 +57,25 @@
           </ul>
         </ul>
       <% else %>
-       <ul class="toggle-ua-form pull-right col-md-1 col-sm-12"><li class="btn navbar-btn">Sign up / Login</li></ul>
+        <ul class="toggle-ua-form pull-right col-md-1 col-sm-12">
+          <li class="btn navbar-btn">Sign up / Login</li>
+        </ul>
       <% end %> <!-- End of right navbar -->
 
       <!-- Subreddit links navbar -->
       <div class="collapse navbar-collapse col-md-11 col-sm-12" id="navbar-subreddits">
         <ul class="nav navbar-nav row">
 
-          <li class=""><a class="navbar-brand btn" href="/">FRONT</a></li>
+          <li class="btn">
+            <a href="/">FRONT</a>
+          </li>
 
           <!-- MY SUBREDDITS BUTTON - shows users subreddits or public subreddits with highest sub count -->
           <li class="btn-group navbar-btn">
             <!-- Button for dropdown -->
-            <button class="btn dropdown-toggle" data-toggle="dropdown">MY SUBREDDITS</button>
+            <button class="btn dropdown-toggle" data-toggle="dropdown">
+              <p>MY SUBREDDITS</p>
+            </button>
             <button class="btn dropdown-toggle" data-toggle="dropdown">
               <span class="caret"></span>
             </button>
@@ -148,7 +154,7 @@
       $( "#ua-form").toggle();
     });
 
-    // 
+    // If window is resized, add or remove col-xs-12 class from subreddits navbar items
     $(window).resize(function () {
       var viewportWidth = $(window).width();
       if (viewportWidth < 768) {

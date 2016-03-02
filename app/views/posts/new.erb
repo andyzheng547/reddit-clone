@@ -1,21 +1,41 @@
 <h1>New post</h1>
+<hr>
 
 <form method="post" action="/posts/new">
-  <h2>Submit a new link / Submit a new text post</h2><br>
-  <input type="radio" name="post_type_id" value="1"><p>Link</p><br>
-  <input type="radio" name="post_type_id" value="2" checked><p>Text</p>
+  <label for="post_type_id">Submit a link / text post</label>
+  <div class="radio-inputs row">
+    <label for="1" class="col-xs-2">
+      <input type="radio" name="post_type_id" value="1"> Link
+    </label>
+    <label for="2" class="col-xs-2">
+      <input type="radio" name="post_type_id" value="2" checked> Text
+    </label>
+  </div>
 
-  <h3>Title: </h3><input type="text" name="title" placeholder="title"><br>
-  <h3>Link: </h3><input type="url" name="link" placeholder="link">
-  <h3>Content: </h3><textarea name="content" placeholder="content"></textarea><br>
+  <div class="row">
+    <label class="col-xs-1">Title: </label>
+    <input class="col-xs-11" type="text" name="title" placeholder="title">
+  </div><br>
 
-  <h3>Post to: </h3><br>
-  <input list="subreddits" name="subreddit_name">
-  <datalist id="subreddits">
-    <% Subreddit.all.each do |subreddit| %>
-      <option value="<%= subreddit.name %>">
-    <% end %>
-  </datalist>
+  <div class="row">
+    <label class="col-xs-1">Link: </label>
+    <input class="col-xs-11" type="url" name="link" placeholder="link">
+  </div><br>
+
+  <div class="row">
+    <label class="col-xs-1">Content: </label><br>
+    <textarea class="col-xs-11" name="content" placeholder="content"></textarea><br>
+  </div><br>
+
+  <div class="row">
+    <label class="col-xs-1">Post to: </label>
+    <input class="col-xs-2" list="subreddits" name="subreddit_name">
+    <datalist id="subreddits">
+      <% Subreddit.all.each do |subreddit| %>
+        <option value="<%= subreddit.name %>">
+      <% end %>
+    </datalist>
+  </div>
 
   <br>
   <input type="submit" value="Submit New Post">

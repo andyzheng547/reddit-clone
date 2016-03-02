@@ -1,18 +1,52 @@
 <ul>
   <% if @posts %>
-    <% @posts.each do |post| %>
+    <% @posts.each.with_index(1) do |post, index| %>
 
       <% if post.post_type_id == 1 %>
         <% subreddit = Subreddit.find(post.subreddit_id) %>
-        <h5><a href="<%= post.link %>"><%= post.title %></a> (<%= post.link_host %>)</h5>
-        <p>submited by <a href="/u/<%= post.user.name %>"><%= post.user.name %></a> to <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">/r/<%= subreddit.name %></a></p>
-        <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">Comments</a>
+        <div class="row">
+          <!-- Post # -->
+          <div class="col-xs-1 post-number">
+            <p><%= index %></p>
+          </div>
+
+          <!-- Post -->
+          <div class="col-xs-11 post-info">
+            <h5>
+              <a href="<%= post.link %>"><%= post.title %></a> (<%= post.link_host %>)
+            </h5>
+            <p>
+              submited by <a href="/u/<%= post.user.name %>"><%= post.user.name %></a> to <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">/r/<%= subreddit.name %></a>
+            </p>
+            <p>
+              <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">
+              <%= post.comments.count %> comments</a>
+            </p>
+          </div>
+        </div>
         <br><br>
       <% else %>
         <% subreddit = Subreddit.find(post.subreddit_id) %>
-        <h5><a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a></h5>
-        <p>submited by <a href="/u/<%= post.user.name %>"><%= post.user.name %></a> to <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">/r/<%= subreddit.name %></a></p>
-        <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">Comments</a>
+        <div class="row">
+          <!-- Post # -->
+          <div class="col-xs-1 post-number">
+            <p><%= index %></p>
+          </div>
+
+          <!-- Post -->
+          <div class="col-xs-11 post-info">
+            <h5>
+              <a href="/r/<%= post.subreddit.slug %>/<%= post.slug %>/comments"><%= post.title %></a>
+            </h5>
+            <p>
+              submited by <a href="/u/<%= post.user.name %>"><%= post.user.name %></a> to <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">/r/<%= subreddit.name %></a>
+            </p>
+            <p>
+            <a href="/r/<%= subreddit.slug %>/<%= post.slug %>/comments">
+              <%= post.comments.count %> comments</a>
+            </p>
+          </div>
+        </div>
         <br><br>
       <% end %>
 
