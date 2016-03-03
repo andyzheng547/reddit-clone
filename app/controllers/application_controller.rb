@@ -11,6 +11,7 @@ class ApplicationController < Sinatra::Base
     set :session_secret, "secret"
   end
 
+  # 404 error
   not_found do
     erb :"404_error"
   end
@@ -18,12 +19,6 @@ class ApplicationController < Sinatra::Base
   # Index has posts from all subreddits
   get '/' do
     redirect "/pg/1"
-  end
-
-  get '/test' do
-    session.clear
-    @current_user = nil
-    "Session current_user cleared: #{current_user.name}"
   end
 
   # Index shows up to 25 posts a page. The smaller the page number the more current the post entries are.
@@ -85,6 +80,7 @@ class ApplicationController < Sinatra::Base
     !!current_user
   end
 
+  # Get posts 25 posts for front page
   def get_posts(page_num)
     total_posts = Post.all
     max_pages = (total_posts.count.to_f / page_num).ceil

@@ -14,6 +14,7 @@ class Subreddit < ActiveRecord::Base
   # Moderators means moderator status
   has_many :moderators
 
+  # Change slug to account for spaces and punctuation in subreddit name
   def slug
     name.downcase.gsub(/[\'\"]/, "").gsub(/[\W]/, "-")
   end

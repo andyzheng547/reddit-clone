@@ -1,4 +1,3 @@
-
 # Post types: 1 = Link Post, 2 = Text Post
 
 class PostsController < ApplicationController
@@ -17,7 +16,7 @@ class PostsController < ApplicationController
     if params[:title].gsub(" ", "").empty?
       erb :"posts/new", locals: {message: "You left this post without a title."}
 
-    # If the user did not click a checkbox indicating the subreddit to post to
+    # If the user did not indicate the subreddit they want to post to
     elsif params[:subreddit_name].empty?
       erb :"posts/new", locals: {message: "You need to post to a subreddit."}
 
@@ -27,7 +26,7 @@ class PostsController < ApplicationController
 
       # Link Post
       when "1"
-        # If they forgot a link
+        # If they forgot a link, remind them
         if params[:link].gsub(" ", "").empty?
           erb :"posts/new", locals: {message: "You need a link."}
         # else create link post
@@ -65,6 +64,7 @@ class PostsController < ApplicationController
     erb :"posts/show"
   end
 
+  # Add new comment to a post then redirect back to post
   post '/r/:subreddit_slug/:post_slug/new_comment' do
     if !params[:content].gsub(" ", "").empty?
       @comment = Comment.create(
@@ -77,6 +77,7 @@ class PostsController < ApplicationController
     redirect "/r/#{Subreddit.find_by_slug(params[:subreddit_slug]).slug}/#{Post.find_by_slug(params[:post_slug]).slug}/comments"
   end
 
+  # Add new reply to a post then redirect back to post
   post '/r/:subreddit_slug/:post_slug/new_reply' do
     if !params[:content].gsub(" ", "").empty?
       @comment = Comment.create(

@@ -13,6 +13,8 @@ class UsersController < ApplicationController
 
   post '/u/:username/edit' do
     @user = User.find(params[:user_id])
+
+    # Update username if new username was given
     if !params[:name].gsub(" ", "").empty? && User.valid_username?(params[:name])
       # Username is taken and message shown or username is updated
       if found_user = User.find_by(name: params[:name])
@@ -22,6 +24,7 @@ class UsersController < ApplicationController
       end
     end
 
+    # Update password if user confirms old password and gives a new one
     if !params[:old_password].empty? && !params[:new_password].empty? && @user.authenticate(params[:old_password])
       @user.update(password: params[:new_password])
     end
@@ -29,12 +32,14 @@ class UsersController < ApplicationController
     redirect "/u/#{@user.name}"
   end
 
+  # Form for deleting user
   get '/u/:username/delete' do
     @user = User.find_by(name: params[:username])
     redirect "/" if current_user != @user
     erb :"users/delete"
   end
 
+  # If user is a moderator, reassign the mod statuses or delete subreddits
   post '/u/:username/delete' do
     @user = User.find(params[:user_id])
 
@@ -44,7 +49,7 @@ class UsersController < ApplicationController
       # Find each subreddit the user a moderator of. 
       # If the subreddit does not have another moderator find another subscriber to make a mod or delete the subreddit.
       mod_statuses.each do |mod|
-        subreddit = Subreddit.find(mod.subreddit_id)
+        subreddit = mod.subreddit
         subscription = Subscription.find_by(subreddit_id: subreddit.id, user_id: @user.id)
 
         # Find the next mod for the subreddits the user is in charge of or delete the subreddit
@@ -53,41 +58,26 @@ class UsersController < ApplicationController
           if subreddit.subscriptions.where(access: true).count > 1
             new_mod_user_id = subreddit.subscriptions.where(access: true).second.user_id
             mod.update(user_id: new_mod_user_id)
+
           # Delete the subreddit then the moderator status
           else
-            if subreddit.methods.include?(:delete_all)
-              subreddit.delete_all
-            else
-              subreddit.delete
-            end
-            if mod.methods.include?(:delete_all)
-              mod.delete_all
-            else
-              mod.delete
-            end
+            subreddit.delete
+            mod.delete
           end
         end
 
-        # Delete subscription to subreddit
-        if subscription.methods.include?(:delete_all)
-          subscription.delete_all
-        else
-          subscription.delete
-        end
-
+        subscription.delete
       end # end of loop
 
-      if @user.methods.include?(:delete_all)
-        @user.delete_all
-      else
-        @user.delete
-      end
+      @user.delete
       session.clear
       @current_user = nil
+
       redirect "/"
+
+    # Redirect back to profile if user selected no or nothing 
     else
       redirect "/u/#{@user.name}"
     end
   end
-
 end
