@@ -41,33 +41,14 @@ class UsersController < ApplicationController
 
   # If user is a moderator, reassign the mod statuses or delete subreddits
   post '/u/:username/delete' do
-    @user = User.find(params[:user_id])
+    @user = current_user
 
     if params[:confirmation] == "yes"
-      mod_statuses = Moderator.where(user_id: @user.id)
-
-      # Find each subreddit the user a moderator of. 
-      # If the subreddit does not have another moderator find another subscriber to make a mod or delete the subreddit.
-      mod_statuses.each do |mod|
-        subreddit = mod.subreddit
-        subscription = Subscription.find_by(subreddit_id: subreddit.id, user_id: @user.id)
-
-        # Find the next mod for the subreddits the user is in charge of or delete the subreddit
-        if subreddit.moderators.count == 1
-          # Found someone else with access to subreddit to make the next mod
-          if subreddit.subscriptions.where(access: true).count > 1
-            new_mod_user_id = subreddit.subscriptions.where(access: true).second.user_id
-            mod.update(user_id: new_mod_user_id)
-
-          # Delete the subreddit then the moderator status
-          else
-            subreddit.delete
-            mod.delete
-          end
-        end
-
-        subscription.delete
-      end # end of loop
+      # Reassign moderator status or delete moderated subreddits
+      current_user.moderators.each do |mod_status|
+        mod_subscription = current_user.subscriptions.find_by(mod_status.subreddit.id)
+        mod_status.subreddit.reassign_mod_or_delete_subreddit(mod_subscription)
+      end
 
       @user.delete
       session.clear

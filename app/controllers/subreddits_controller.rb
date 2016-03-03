@@ -78,8 +78,7 @@ class SubredditsController < ApplicationController
     if params[:new_mod_username].empty?
       # If username is empty do nothing
     elsif found_user = User.find_by(name: params[:new_mod_username])
-      # if username entered belongs to an actual user 
-      # check that user is subscribed to the subreddit before making them a mod
+      # if username entered belongs to an actual user who is subscribed
       if subscribers_user_ids.include?(found_user.id)
         new_mod = Moderator.create(subreddit_id: subreddit.id, user_id: found_user.id )
       end
@@ -106,20 +105,15 @@ class SubredditsController < ApplicationController
   post '/r/:subreddit_slug/unsubscribe' do
     subreddit = Subreddit.find(params[:subreddit_id])
 
-    # If the user was the moderator and there are no other mods, find another subscriber to make a mod or delete the subreddit.
-    if subreddit.moderators.count == 1 && mod_status = Moderator.find_by(user_id: current_user.id, subreddit_id: subreddit.id)
-      # Change the mod status to someone else
-      if subreddit.subscriptions.where(access: true).count > 1
-        new_mod_user_id = subreddit.subscriptions.where(access: true).second.user_id
-        mod_status.update(user_id: new_mod_user_id)
-      else
-        subreddit.delete
-        mod_status.delete
-      end
-    end
+    # If they were a mod, reassign mod status/delete subreddit if necessary
+    if current_user.moderators.pluck(:subreddit_id).include?(subreddit.id)
+      mod_subscription = current_user.subscriptions.find_by(subreddit.id)
+      subreddit.reassign_mod_or_delete_subreddit(mod_subscription)
 
-    subscription = Subscription.find_by(subreddit_id: subreddit.id, user_id: current_user.id)
-    subscription.delete
+    # They were only subscribed but were not a mod
+    else
+      subreddit.subscriptions.find_by(user_id: current_user.id).delete
+    end
 
     redirect to "/u/#{current_user.name}"
   end

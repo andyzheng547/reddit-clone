@@ -16,6 +16,11 @@ class ApplicationController < Sinatra::Base
     erb :"404_error"
   end
 
+  get '/test' do
+    subreddit = Subreddit.find(26)
+    "#{current_user.moderators.pluck(:subreddit_id).include?(26)}"
+  end
+
   # Index has posts from all subreddits
   get '/' do
     redirect "/pg/1"
