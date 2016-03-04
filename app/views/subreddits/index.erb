@@ -1,3 +1,4 @@
+<!-- Show subreddits info and up to 25 posts for page -->
 <div class="row">
   <!-- Subreddit info on right side of screen -->
   <div class="subreddit-info col-md-2">
@@ -5,18 +6,23 @@
   </div>
 
   <div class="posts col-md-10 col-sm-12">
+    <!-- Show posts if the subreddit is public or if the user has a subscription with access -->
     <% if @subreddit.is_private == false || 
-      (!!@user && @subreddit.is_private == true && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
+      (!!@user && subscription = Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id, access: true) )%>
 
       <%= erb :"posts/display_posts" %>
 
     <% else %>
-      <h1>Sorry, but you need to be subscribed to view this subreddit.</h1>
 
-      <!-- If they already had a subscription request. -->
+      <!-- If they already had a subscription but access is false -->
       <% if !!@user && subscription =  Subscription.find_by(user_id: @user.id, subreddit_id: @subreddit.id) %>
-        <p>Your subscription: <%= subscription.access %></p>
+        <p>Your subscription access: <%= subscription.access %></p>
+
+      <!-- Not subscribed and private -->
+      <% else %>
+        <h1>Sorry, but you need to be subscribed to view this subreddit.</h1>
       <% end %>
+
     <% end %>
   </div>
 

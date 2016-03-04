@@ -50,6 +50,7 @@ class UsersController < ApplicationController
         mod_status.subreddit.reassign_mod_or_delete_subreddit(mod_subscription)
       end
 
+      # Delete user and clear out session and @current_user
       @user.delete
       session.clear
       @current_user = nil

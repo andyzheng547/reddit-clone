@@ -1,20 +1,38 @@
+<!-- Moderators page -->
 <h3>Moderator of: </h3>
 <hr>
+
+<!-- Shows all subreddits the user moderates. Also shows names of users who subscribed to private subreddots and are waiting for access. -->
 <ul>
   <% @user.moderators.each do |mod| %>
+
+    <!-- Subreddit name, add mod and edit subreddit links -->
     <h5><a href="/r/<%= mod.subreddit.slug %>">/r/<%= mod.subreddit.name %></a></h5>
-    <a href="/r/<%= mod.subreddit.slug %>/add_mod"><button>Add a mod</button></a>
-    <a href="/r/<%= mod.subreddit.slug %>/edit"><button>Edit subreddit</button></a>
+    <a href="/r/<%= mod.subreddit.slug %>/add_mod">
+      <button>Add a mod</button>
+    </a>
+    <a href="/r/<%= mod.subreddit.slug %>/edit">
+      <button>Edit subreddit</button>
+    </a>
+
+    <!-- Approve access for subscribers who don't have access to private subreddits -->
     <ul>
       <% mod.subreddit.subscriptions.each do |subscription| %>
+
         <% if mod.subreddit.is_private == true &&  subscription.access == false %>
-          <p>Approve access for: <a href="/u/<%= subscription.user.name %>">/u/<%= subscription.user.name %></a></p>
+          <!-- Subscriber's name -->
+          <p>Approve access for: 
+            <a href="/u/<%= subscription.user.name %>">/u/<%= subscription.user.name %></a>
+          </p>
+
+          <!-- Approve subscriber's access -->
           <form method="post" action="/r/approve_sub/<%= subscription.id %>">
             <input type="submit" value="Approve">
           </form>
         <% end %>
-      <% end %>
-    </ul>
-    <hr>
-  <% end %>
+
+      <% end %> <!-- end of moderator.subscriptions loop -->
+    </ul><hr>
+
+  <% end %> <!-- end of user.moderators loop -->
 </ul>

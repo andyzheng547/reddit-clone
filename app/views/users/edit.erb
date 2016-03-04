@@ -1,13 +1,16 @@
+<!-- Edit profile form -->
 <h1>Edit /u/<%= @user.name %></h1>
 <hr>
 
 <form method="post" action="/u/<%= @user.name %>/edit">
+  <!-- Edit username -->
   <input type="hidden" name="user_id" value="<%= @user.id %>">
   <label for="name">Change Username:<br>
     <input type="text" name="name" placeholder="change username"><br>
   </label>
   <br><br>
 
+  <!-- Edit password - will only work if they enter old password correctly -->
   <label for="password">Change Password:<br>
     <input type="password" name="old_password" placeholder="old password"><br>
     <input type="password" name="new_password" placeholder="new password">

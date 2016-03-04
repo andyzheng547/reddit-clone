@@ -59,6 +59,7 @@ class ApplicationController < Sinatra::Base
       if @user && @user.authenticate(params[:password])
         session[:user_id] = @user.id
         redirect "/u/#{@user.name}"
+        
       # Failure - wrong password for username
       else
         erb :index, locals: {message: "You entered the wrong password."}

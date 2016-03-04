@@ -21,7 +21,7 @@
     <div class="container-fluid">
     <div class="row">
 
-      <!-- Hamburger Menu -->
+      <!-- Hamburger Button - toggles #navbar-subreddits -->
       <div class="navbar-header pull-left">
         <button class="navbar-toggle" data-toggle="collapse" data-target=" #navbar-subreddits">
           <span class="sr-only">Toggle subreddit links</span>
@@ -31,11 +31,15 @@
         </button>
       </div>
 
-      <!-- Navbar on right - User authentication, links to create new posts/subreddits, profile -->
+      <!-- User navbar - User authentication, links to create new posts/subreddits, profile -->
       <% if logged_in? %>
         <ul class="pull-right col-xs-1">
-          <li class="navbar-btn dropdown-toggle username-btn pull-right " data-toggle="dropdown"><h4><%= current_user.name %></h4></li>
+          <!-- Username - toggles the dropdown menu for links to profile, new subreddit/post form and logout -->
+          <li class="navbar-btn dropdown-toggle username-btn pull-right " data-toggle="dropdown">
+            <h4><%= current_user.name %></h4>
+          </li>
 
+          <!-- Dropdown menu for user -->
           <ul id="user-menu" class="dropdown-menu">
             <li>
               <a href="/u/<%= current_user.name %>">Profile</a>
@@ -49,6 +53,8 @@
               <a href="/posts/new">New Post</a>
             </li>
             <li role="separator" class="divider"></li>
+
+            <!-- Logout button -->
             <li id="logout-btn">
               <form class="remove-form-container-style" method="post" action="/logout">
                 <input type="submit" value="Log Out">
@@ -56,23 +62,30 @@
             </li>
           </ul>
         </ul>
+
+      <!-- If not logged in, show the signup/login button -->
       <% else %>
         <ul class="toggle-ua-form pull-right col-xs-1">
           <li id="ua-button" class="btn navbar-btn">signup / login</li>
         </ul>
-      <% end %> <!-- End of right navbar -->
+      <% end %> <!-- End of user navbar -->
 
       <!-- Subreddit links navbar -->
+      <!-- Collapses into hamburger button when screen width is small -->
       <div class="collapse navbar-collapse col-md-11 col-sm-12" id="navbar-subreddits">
         <ul class="nav navbar-nav row">
 
           <li class="navbar-btn">
             <a href="/">FRONT</a>
           </li>
+          <li class="all-subreddits-btn">
+            <a href="/subreddits">ALL</a>
+          </li>
 
-          <!-- MY SUBREDDITS BUTTON - shows users subreddits or public subreddits with highest sub count -->
+          <!-- MY SUBREDDITS - shows user's subscribed subreddits or public subreddits -->
           <li class="btn-group navbar-btn">
-            <!-- Button for dropdown -->
+
+            <!-- Toggle button for dropdown menu-->
             <button class="btn dropdown-toggle" data-toggle="dropdown">
               <p>MY SUBREDDITS</p>
             </button>
@@ -83,33 +96,31 @@
             <!-- Dropdown menu with subreddits --> 
             <ul class="dropdown-menu row">
               <% if logged_in? %>
-              <!-- List 20 of the current user's subscribed subbreddits -->
-                <% list_of_subreddits = current_user.subreddits.limit(20) %>
-                <% list_of_subreddits.each do |subreddit| %>
-                  <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
-                  <li role="separator" class="divider"></li>
-                <% end %>
-              <!-- Not logged in -->
+                <!-- List 20 of the current user's subscribed subbreddits -->
+                  <% list_of_subreddits = current_user.subreddits.limit(20) %>
+                  <% list_of_subreddits.each do |subreddit| %>
+                    <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
+                    <li role="separator" class="divider"></li>
+                  <% end %>
               <% else %>
-              <!-- Find 20 subreddits which are public and order them by their subscriptions count -->
+                <!-- Find 20 subreddits which are public and order them by their subscriptions count -->
                 <% list_of_subreddits = Subreddit.where(is_private: false).joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(20) %>
                 <% list_of_subreddits.each do |subreddit| %>
                   <li><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
                   <li role="separator" class="divider"></li>
                 <% end %>
               <% end %>
-              <li class="all-subreddits-btn"><a href="/subreddits">ALL SUBREDDITS</a></li>
             </ul>
 
-          </li> <!-- end of btn-group for MY SUBREDDITS BUTTON -->
+          </li> <!-- end of MY SUBREDDITS BUTTON -->
 
-          <!-- Public Subreddits buttons -->
-          <% Subreddit.all.joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(15).each do |subreddit| %>
+          <!-- Public Subreddit links -->
+          <% Subreddit.all.joins(:subscriptions).group("subscriptions.subreddit_id").order("count(subscriptions.subreddit_id) desc").limit(13).each do |subreddit| %>
             <li class="navbar-btn"><a href="/r/<%= subreddit.slug %>"><%= subreddit.name.upcase %></a></li>
           <% end %>
 
-        </ul> <!-- End of navbar-nav -->
-      </div> <!-- End of Subreddit links -->
+        </ul> <!-- End of navbar for subreddits -->
+      </div> <!-- End of #navbar-subreddits -->
 
     </div> <!-- end of row -->
     </div> <!-- end of fluid container -->
@@ -118,7 +129,7 @@
   <!-- Main content -->
   <div class="container">
 
-    <!-- Messages when the user signups, logins, logouts (successful or unsuccessful) or errors with editing/creating -->
+    <!-- Messages when user makes mistake on signup, login, new subreddit/post creation/edits -->
     <% unless locals.empty? %>
       <%= message %>
     <% end %>
@@ -138,11 +149,12 @@
 
   <!-- Javascript for toggling ua-form -->
   <script type="text/javascript">
+    // When page loads
     $(function(){
       // Hide user authentication form
       $("#ua-form").hide();
 
-      // Add col-xs-12 to navbar list items based on window size
+      // Add col-xs-12 to navbar list items if window is extra small
       var viewportWidth = $(window).width();
       if (viewportWidth < 768) {
         $("#navbar-subreddits li").addClass("col-xs-12");
@@ -150,11 +162,13 @@
 
     });
 
+    // Show/hide ua-form
     $(".toggle-ua-form").click(function(){
       $( "#ua-form").toggle();
     });
 
     // If window is resized, add or remove col-xs-12 class from subreddits navbar items
+    // For spacing purposes
     $(window).resize(function () {
       var viewportWidth = $(window).width();
       if (viewportWidth < 768) {

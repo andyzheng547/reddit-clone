@@ -1,32 +1,55 @@
+<!-- Replies to parent comments and reply form -->
+<!-- Each reply is ided by its primary id so that the reply reply forms and toggle javascript can target specifically -->
 <ul>
   <% replies.each do |reply| %>
+
+    <!-- Replier's name and reply content -->
     <% replier = User.find(reply.user_id) %>
     <h6><a href="/u/<%= replier.name %>"><%= replier.name %></a></h6>
     <p><%= reply.content %></p>
 
-    <!-- Add reply to reply -->
+    <!-- If logged in, show form to reply to a reply -->
     <% if logged_in? %>
-      <button ng-init="show_reply_form_<%= reply.id %> = false"  ng-click="show_reply_form_<%= reply.id %>  = !show_reply_form_<%= reply.id %> ">Reply</button>
+      <!-- Toggle button for comment reply form -->
+      <!-- Uses Angular for ng-show -->
+      <button ng-init="show_comment<%= reply.id %>_reply_form = false"  ng-click="show_comment<%= reply.id %>_reply_form  = !show_comment<%= reply.id %>_reply_form ">Reply</button>
       <br><br>
-      <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_reply_form_<%= reply.id %>" class="row">
+
+      <!-- Reply reply form -->
+      <form method="post" action="/r/<%= @subreddit.slug %>/<%= @post.slug %>/new_reply" ng-show="show_comment<%= reply.id %>_reply_form" class="row">
         <textarea name="content" placeholder="reply" class="col-xs-11"></textarea>
+
+        <!-- Parent id and post id -->
         <input type="hidden" name="parent_id" value="<%= reply.id %>">
         <input type="hidden" name="post_id" value="<%= @post.id %>">
         <br>
+
         <input type="submit" value="Reply">
-        <br>
       </form>
+      <br>
+
     <% end %>
 
-    <!-- Load more replies if any -->
+    <!-- Button to load more replies if any. Button shows up when 2 levels deep into comments -->
+    <!-- Example:
+            |- parent comment 
+              |- parent comment's replies
+                |- button to see replies of replies
+                |- replies of replies hidden
+    -->
     <% if reply.replies.count > 0 %>
       <button id="show_comment<%=reply.id %>_replies">load more comments</button>
+      <!-- Recursively shows replies -->
       <div id="comment<%= reply.id %>">
         <%= erb :"posts/show_comment_replies", locals: {replies: reply.replies} %>
       </div>
 
+      <!-- Javascript to show replies of replies -->
       <script type="text/javascript">
+        // Hides replies of replies until user wants to see them
         $("#comment<%= reply.id %>").hide();
+
+        // If button clicked show replies and hide button
         $("#show_comment<%=reply.id %>_replies").click(function(){
           $( "#comment<%= reply.id %>").show();
           $(this).hide()

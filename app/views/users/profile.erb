@@ -10,7 +10,7 @@
 </a>
 
 <hr><br>
-<!-- Buttons to toggle show/hide -->
+<!-- Buttons to toggle partials -->
 <div class="btn-group btn-group-lg" role="group" aria-label="user_navigation">
   <button type="button" class="btn btn-secondary show-btn" target="comments">Comments</button>
   <button type="button" class="btn btn-secondary show-btn" target="posts">Posts</button>
@@ -21,7 +21,7 @@
   <% end %>
 </div>
 
-<!-- Partials -->
+<!-- Partials for: comments, posts, subscribed subreddits, moderator status -->
 <div id="comments" class="target-div">
   <%= erb :"users/show_comments" %>
 </div>
@@ -30,6 +30,8 @@
   <%= erb :"users/show_posts" %>
 </div>
 
+<!-- Subscribed subreddits and moderator info - shows info and has links to edit/delete -->
+<!-- Only show if current user is same as profile -->
 <% if session[:user_id] != nil && @user == current_user%>
   <div id="subreddits" class="target-div">
     <%= erb :"users/show_subreddits" %>
@@ -43,11 +45,12 @@
 <!-- Javascript to show and hide partials -->
 <script type="text/javascript">
 
+  // Show comments, hide others
   $(function(){
     $("#posts, #subreddits, #mods").hide();
   });
 
-
+  // Show partial, hide current one
   $(".show-btn").click(function(){
     $(".target-div").hide();
     $( "#" + $(this).attr("target") ).show();

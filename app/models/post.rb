@@ -13,7 +13,7 @@ class Post < ActiveRecord::Base
   belongs_to :post_type
 
   # Overwrite the slug method from the slugifiable module
-  # Post uses title instead of name
+  # Post has a title instead of name
   def slug
     title.downcase.gsub(/[\'\"]/, "").gsub(/[\W]/, "-")
   end

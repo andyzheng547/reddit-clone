@@ -1,9 +1,12 @@
+<!-- User subscribed subreddits page -->
 <h3>Subreddits you are subscribed to</h3>
 <hr>
 
+<!-- Show subreddit name and unsubscribe button -->
 <ul>
 <% @user.subreddits.each do |subreddit| %>
 
+  <!-- Subreddit name -->
   <a href="/r/<%= subreddit.slug %>">/r/<%= subreddit.name %></a>
 
   <!-- Unsubscribe -->
