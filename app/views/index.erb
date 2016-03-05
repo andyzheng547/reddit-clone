@@ -1,5 +1,18 @@
 <!-- Display posts from all subreddits -->
 <%= erb :"posts/display_posts" %>
 
-view more: <a href="/pg/<%= params[:page_num].to_i + 1 %>"><button>next > </button></a>
+<!-- Navigate between pages -->
+<% if params[:page_num].to_i <= @max_pages %>
+view more: 
+<% end %>
+<% if params[:page_num].to_i > 1 %>
+  <a href="/pg/<%= params[:page_num].to_i - 1 %>"><button>< prev</button></a>
+<% end %>
+<% if params[:page_num].to_i < @max_pages %>
+  <a href="/pg/<%= params[:page_num].to_i + 1 %>"><button>next > </button></a>
+<% end %>
+
+<!-- .sample selects a random subreddit from Subreddit.all array -->
+<% random_subreddit = Subreddit.all.sample %>
+or try a <a href="/r/<%= random_subreddit.slug %>"><button>random subreddit</button></a>
 <br><br><br>

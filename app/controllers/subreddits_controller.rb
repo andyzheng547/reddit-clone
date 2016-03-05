@@ -16,10 +16,10 @@ class SubredditsController < ApplicationController
   get '/r/:subreddit_slug/pg/:page_num' do
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
     @user = current_user if session[:user_id] != nil
-    @posts, max_pages = get_subreddit_posts(params[:subreddit_slug], params[:page_num].to_i)
+    @posts, @max_pages = get_subreddit_posts(params[:subreddit_slug], params[:page_num].to_i)
 
     # If page number doesn't exist. Example: they try to go to page 2 when there are less than 25 posts.
-    redirect "/r/#{@subreddit.slug}/pg/1" if params[:page_num].to_i <= 0 || params[:page_num].to_i > max_pages
+    redirect "/r/#{@subreddit.slug}/pg/1" if params[:page_num].to_i <= 0 || params[:page_num].to_i > @max_pages
 
     erb :"subreddits/index"
   end

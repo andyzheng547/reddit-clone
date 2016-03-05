@@ -28,5 +28,14 @@
 
 </div>
 
-view more: <a href="/r/<%= @subreddit.slug %>/pg/<%= params[:page_num].to_i + 1 %>"><button>next > </button></a>
+<!-- Navigate between pages -->
+<% if params[:page_num].to_i <= @max_pages %>
+view more: 
+<% end %>
+<% if params[:page_num].to_i > 1 %>
+  <a href="/r/<%= @subreddit.slug %>/pg/<%= params[:page_num].to_i - 1 %>"><button>< prev</button></a>
+<% end %>
+<% if params[:page_num].to_i < @max_pages %>
+  <a href="/r/<%= @subreddit.slug %>/pg/<%= params[:page_num].to_i + 1 %>"><button>next > </button></a>
+<% end %>
 <br><br><br>

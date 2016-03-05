@@ -28,8 +28,8 @@ class ApplicationController < Sinatra::Base
 
   # Index shows up to 25 posts a page. The smaller the page number the more current the post entries are.
   get '/pg/:page_num' do
-    @posts, max_pages = get_posts(params[:page_num].to_i)
-    redirect "/pg/1" if  params[:page_num].to_i > max_pages || params[:page_num].to_i <= 0
+    @posts, @max_pages = get_posts(params[:page_num].to_i)
+    redirect "/pg/1" if  params[:page_num].to_i <= 0 || params[:page_num].to_i > @max_pages
 
     erb :index
   end

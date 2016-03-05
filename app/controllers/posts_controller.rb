@@ -61,7 +61,7 @@ class PostsController < ApplicationController
     @subreddit = Subreddit.find_by_slug(params[:subreddit_slug])
     @post = Post.find_by_slug(params[:post_slug])
     @comments = Comment.where(post_id: @post.id)
-    erb :"posts/show"
+    erb :"posts/show_post"
   end
 
   # Add new comment to a post then redirect back to post
