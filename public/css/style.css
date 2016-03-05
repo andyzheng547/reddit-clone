@@ -14,6 +14,8 @@ body {
   min-height: 100%;
   padding: 0 2em;
   border-radius: 0.3em;
+  margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 nav.navbar:after {
@@ -157,6 +159,25 @@ input.big-submit-btn {
 }
 .post-index p {
   margin: 0 auto;
+}
+
+/* Random subreddit button */
+#random-subreddit-btn {
+  color: rgb(51, 122, 183);
+}
+
+/* Footer */
+#footer {
+  margin-bottom: 0;
+  padding: 1em;
+}
+#footer a {
+  color: rgb(157, 157, 157);
+  margin: 1em;
+}
+#footer a:hover {
+  background-color: rgba(230, 230, 230, .9);
+  text-decoration: underline;
 }
 
 /* @media queries */

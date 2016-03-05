@@ -1,2 +1,1 @@
-# reddit-clone
-Sinatra - Basic CRUD app
+This is a CRUD application made by Andy Zheng. It is inspired by Reddit and is built to demonstrate understanding of CRUD. It is built primarily on Sinatra and ActiveRecord, with Bootstrap for styling. Feel free to use the app as you please.
