@@ -7,7 +7,7 @@
         <div class="row">
           <!-- Post # -->
           <div class="col-xs-1 post-index">
-            <p><%= index %></p>
+            <p><%= index + (params[:page_num].to_i - 1 ) * 25 %></p>
           </div>
 
           <!-- Post -->
@@ -30,7 +30,7 @@
         <div class="row">
           <!-- Post index -->
           <div class="col-xs-1 post-index">
-            <p><%= index %></p>
+            <p><%= index + (params[:page_num].to_i - 1 ) * 25  %></p>
           </div>
 
           <!-- Post -->

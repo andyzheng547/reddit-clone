@@ -29,7 +29,8 @@ class ApplicationController < Sinatra::Base
   # Index shows up to 25 posts a page. The smaller the page number the more current the post entries are.
   get '/pg/:page_num' do
     @posts, max_pages = get_posts(params[:page_num].to_i)
-    redirect "/r/#{@subreddit.slug}/pg/1" if params[:page_num].to_i <= 0 || params[:page_num].to_i > max_pages
+    redirect "/pg/1" if  params[:page_num].to_i > max_pages || params[:page_num].to_i <= 0
+
     erb :index
   end
 
@@ -89,14 +90,18 @@ class ApplicationController < Sinatra::Base
   # Get posts 25 posts for front page
   def get_posts(page_num)
     total_posts = Post.all
-    max_pages = (total_posts.count.to_f / page_num).ceil
+    max_pages = (total_posts.count.to_f / 25).ceil
 
-    # Max pages cannot be 0
+    # Max pages will be 0 if no posts. Max pages should not be 0 or there is an infinite loop of redirects.
     max_pages = 1 if max_pages == 0
 
     # Orders posts by id. Higher ids are the current entries
     select_posts = Post.all.order(id: :desc).limit(25 * page_num)
-    posts = select_posts.limit(select_posts.count % 25)
+    if max_pages == page_num
+      posts = select_posts.last(select_posts.count % 25)
+    else
+      posts = select_posts.last(25)
+    end
 
     return posts, max_pages
   end
@@ -106,14 +111,18 @@ class ApplicationController < Sinatra::Base
     subreddit = Subreddit.find_by_slug(subreddit_slug)
     subreddit_posts = Post.where(subreddit_id: subreddit.id)
 
-    max_pages = (subreddit_posts.count.to_f / page_num).ceil
+    max_pages = (subreddit_posts.count.to_f / 25).ceil
 
-    # Max pages cannot be 0
+    # Max pages will be 0 if no posts. Max pages should not be 0 or there is an infinite loop of redirects.
     max_pages = 1 if max_pages == 0
 
     # Orders posts by id. Higher ids are the current entries
     select_posts = subreddit_posts.order(id: :desc).limit(25 * page_num)
-    posts = select_posts.limit(select_posts.count % 25)
+    if max_pages == page_num
+      posts = select_posts.last(select_posts.count % 25)
+    else
+      posts = select_posts.last(25)
+    end
 
     return posts, max_pages
   end

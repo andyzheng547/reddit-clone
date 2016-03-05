@@ -15,7 +15,6 @@ ActiveRecord::Schema.define(version: 20160217015109) do
 
   create_table "comments", force: :cascade do |t|
     t.text    "content"
-    t.integer "upvotes",   default: 1
     t.integer "user_id"
     t.integer "post_id"
     t.integer "parent_id"
@@ -34,7 +33,6 @@ ActiveRecord::Schema.define(version: 20160217015109) do
     t.string  "title"
     t.string  "link"
     t.text    "content"
-    t.integer "upvotes",      default: 1
     t.integer "post_type_id"
     t.integer "user_id"
     t.integer "subreddit_id"
