@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/bmabey/database_cleaner.git
-  revision: 1cab518efb4cd4d24b751252ab88fe562e302d33
+  revision: 284019742c038ed66bc6fb9c291c64e7e639eeee
   specs:
     database_cleaner (1.5.1)
 
@@ -41,7 +41,7 @@ GEM
     method_source (0.8.2)
     mime-types (3.0)
       mime-types-data (~> 3.2015)
-    mime-types-data (3.2015.1120)
+    mime-types-data (3.2016.0221)
     mini_portile2 (2.0.0)
     minitest (5.8.4)
     nokogiri (1.6.7.2)
@@ -50,8 +50,6 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
-    pry-nav (0.2.4)
-      pry (>= 0.9.10, < 0.11.0)
     rack (1.6.4)
     rack-protection (1.5.3)
       rack
@@ -71,7 +69,7 @@ GEM
       rspec-core (~> 3.4.0)
       rspec-expectations (~> 3.4.0)
       rspec-mocks (~> 3.4.0)
-    rspec-core (3.4.2)
+    rspec-core (3.4.3)
       rspec-support (~> 3.4.0)
     rspec-expectations (3.4.0)
       diff-lcs (>= 1.2.0, < 2.0)
@@ -116,7 +114,6 @@ DEPENDENCIES
   capybara
   database_cleaner!
   pry
-  pry-nav
   rack-test
   rake
   require_all
