@@ -22,11 +22,12 @@
   <h4>
     <a href="/r/<%= @subreddit.slug %>">/r/<%= @subreddit.name %></a>
   </h4><br>
-  <h5>Description</h5>
+  <h4>Description</h4>
   <p><%= @subreddit.description %></p>
+  <br>
 
   <!-- Moderators list -->
-  <h5>Moderators</h5>
+  <h4>Moderators</h4>
   <% @subreddit.moderators.each do |mod| %>
     <p><%= User.find(mod.user_id).name %></p>
   <% end %>

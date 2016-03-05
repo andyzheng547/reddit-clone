@@ -29,7 +29,7 @@
 </div>
 
 <!-- Navigate between pages -->
-<% if params[:page_num].to_i <= @max_pages %>
+<% if params[:page_num].to_i <= @max_pages && @max_pages != 1 %>
 view more: 
 <% end %>
 <% if params[:page_num].to_i > 1 %>
