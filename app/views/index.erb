@@ -13,6 +13,13 @@ view more:
 <% end %>
 
 <!-- .sample selects a random subreddit from Subreddit.all array -->
-<% random_subreddit = Subreddit.all.sample %>
-or try a <a href="/r/<%= random_subreddit.slug %>"><button>random subreddit</button></a>
+or try a <button id="random-subreddit-btn">random subreddit</button>
 <br><br><br>
+
+<script type="text/javascript">
+
+  $("#random-subreddit-btn").click(function(){
+    window.location = "/r/<%= Subreddit.all.sample.slug %>"
+  });
+
+</script>
