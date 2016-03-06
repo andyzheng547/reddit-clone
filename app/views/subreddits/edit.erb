@@ -4,10 +4,12 @@
 <form method="post" action="/r/<%= @subreddit.slug %>/edit">
 
   <!-- Subreddit description -->
-  <label for="description">Description:</label>
-  <textarea name="description" placeholder="description">
-    <%= @subreddit.description %>
-  </textarea><br>
+    <div class="row">
+      <label for="description" class="col-xs-1">Description:</label>
+      <textarea name="description" placeholder="description" class="col-xs-10">
+        <%= @subreddit.description %>
+      </textarea><br>
+    </div>
 
   <!-- Subreddit private status -->
   <!-- radio is checked based on current status -->
