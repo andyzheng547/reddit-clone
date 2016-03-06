@@ -1,13 +1,15 @@
 <h1>/u/<%= @user.name %> profile</h1>
 
 <!-- Edit Profile link -->
-<a href="/u/<%= @user.name %>/edit" class="no-wrap">
-  <button>Edit Profile</button>
-</a>
-<!-- Edit Profile link -->
-<a href="/u/<%= @user.name %>/delete" class="no-wrap">
-  <button>Delete Profile</button>
-</a>
+<% if logged_in? && current_user == @user %>
+  <a href="/u/<%= @user.name %>/edit" class="no-wrap">
+    <button>Edit Profile</button>
+  </a>
+  <!-- Edit Profile link -->
+  <a href="/u/<%= @user.name %>/delete" class="no-wrap">
+    <button>Delete Profile</button>
+  </a>
+<% end %>
 
 <hr><br>
 <!-- Buttons to toggle partials -->
@@ -32,7 +34,7 @@
 
 <!-- Subscribed subreddits and moderator info - shows info and has links to edit/delete -->
 <!-- Only show if current user is same as profile -->
-<% if session[:user_id] != nil && @user == current_user%>
+<% if logged_in? && @user == current_user%>
   <div id="subreddits" class="target-div">
     <%= erb :"users/show_subreddits" %>
   </div>
