@@ -38,6 +38,7 @@ class ApplicationController < Sinatra::Base
   post '/signup' do
     # There was already a user with that name
     if found_existing_user = User.find_by(name: params[:name])
+      @max_pages = 1
       erb :index, locals: {message: "That username is already taken."}
 
     # Create a new user if everything is valid and not empty. 
