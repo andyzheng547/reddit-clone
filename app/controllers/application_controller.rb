@@ -48,6 +48,7 @@ class ApplicationController < Sinatra::Base
 
     # Username was invalid or password and/or username was empty.
     else
+      @max_pages = 1
       erb :index, locals: {message: "Please enter valid username(letters, numbers, dashes and underscores) and password."}
     end
   end
@@ -62,11 +63,13 @@ class ApplicationController < Sinatra::Base
         
       # Failure - wrong password for username
       else
+        @max_pages = 1
         erb :index, locals: {message: "You entered the wrong password."}
       end
 
     # Could not find user
     else
+      @max_pages = 1
       erb :index, locals: {message: "Could not find the account. Try logging in again."}
     end
   end
